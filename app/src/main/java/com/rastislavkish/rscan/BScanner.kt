@@ -12,11 +12,12 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 
 import java.util.concurrent.Executors
 
+import com.google.mlkit.vision.common.InputImage
+
 import com.google.mlkit.vision.barcode.Barcode
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
-
 
 class BScanner(activity: AppCompatActivity) {
 
@@ -27,6 +28,8 @@ class BScanner(activity: AppCompatActivity) {
 
     private val scanner: BarcodeScanner
     private val imageAnalysis: ImageAnalysis
+
+    private var barcodeDetectedListeners=mutableListOf<(String) -> Unit>()
 
     init {
 
@@ -47,14 +50,40 @@ class BScanner(activity: AppCompatActivity) {
         cameraProviderFuture.addListener(Runnable {
             cameraProvider=cameraProviderFuture.get()
 
-            cameraProvider?.bindToLifecycle(activity, CameraSelector.DEFAULT_BACK_CAMERA, imageAnalysis)
+            val camera=cameraProvider?.bindToLifecycle(activity, CameraSelector.DEFAULT_BACK_CAMERA, imageAnalysis)
+            if (camera!=null) {
+                if (camera.cameraInfo.hasFlashUnit()) {
+                    camera.cameraControl.enableTorch(true)
+                    }
+                }
             }, ContextCompat.getMainExecutor(activity))
-
         }
 
-    fun analyzeImage(imageProxy: ImageProxy)
+    fun addBarcodeDetectedListener(f: (String) -> Unit)
         {
+        barcodeDetectedListeners.add(f)
+        }
 
+    private fun analyzeImage(imageProxy: ImageProxy)
+        {
+        val mediaImage=imageProxy.image
+        if (mediaImage!=null) {
+            val image=InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+
+            scanner.process(image)
+            .addOnCompleteListener({ _ -> imageProxy.close() })
+            .addOnSuccessListener(this::barcodesDetected)
+            }
+        }
+    private fun barcodesDetected(barcodes: List<Barcode>)
+        {
+        for (barcode in barcodes) {
+            for (f in barcodeDetectedListeners) {
+                if (barcode.rawValue!=null) {
+                    f(barcode.rawValue ?: "")
+                    }
+                }
+            }
         }
 
     }

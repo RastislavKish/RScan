@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var speech: Speech
 
     private val barcodeScannerBeep=Sound()
+    private lateinit var scanner: BScanner
     private lateinit var codeScanner: CodeScanner
     private lateinit var permissionsRequester: PermissionsRequester
 
@@ -40,20 +41,23 @@ class MainActivity : AppCompatActivity() {
         val scannerView=findViewById<CodeScannerView>(R.id.codeScannerView)
         codeScanner=CodeScanner(this, scannerView)
         codeScanner.autoFocusMode=AutoFocusMode.CONTINUOUS
-        codeScanner.scanMode=ScanMode.CONTINUOUS
-        codeScanner.decodeCallback=DecodeCallback(this::decodeCallback)
+        //codeScanner.scanMode=ScanMode.CONTINUOUS
+        //codeScanner.decodeCallback=DecodeCallback(this::decodeCallback)
+
+        scanner=BScanner(this)
+        scanner.addBarcodeDetectedListener(this::barcodeDetected)
         }
     override fun onPause()
         {
         super.onPause()
 
-        codeScanner.releaseResources()
+        //codeScanner.releaseResources()
         }
     override fun onResume()
         {
         super.onResume()
 
-        codeScanner.startPreview()
+        //codeScanner.startPreview()
         }
 
     fun decodeCallback(result: Result)
@@ -67,4 +71,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    fun barcodeDetected(value: String)
+        {
+        if (value!=lastDetectedBarcode) {
+            lastDetectedBarcode=value
+
+            barcodeScannerBeep.play()
+            speech.speak(value)
+
+            }
+        }
     }
