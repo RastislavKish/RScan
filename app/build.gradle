@@ -35,7 +35,6 @@ android {
 dependencies {
 
 implementation 'com.github.RastislavKish:RtkKotlinAndroid:v1.0'
-implementation 'com.github.yuriy-budiyev:code-scanner:2.1.0'
 implementation 'com.google.mlkit:barcode-scanning:16.1.2'
 
 // CameraX core library
