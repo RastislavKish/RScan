@@ -33,13 +33,13 @@ class MainActivity : AppCompatActivity() {
         scanner.addBarcodeDetectedListener(this::barcodeDetected)
         }
 
-    fun barcodeDetected(value: String)
+    fun barcodeDetected(barcodeInfo: BarcodeInfo)
         {
-        if (value!=lastDetectedBarcode) {
-            lastDetectedBarcode=value
+        if (barcodeInfo.value!=lastDetectedBarcode) {
+            lastDetectedBarcode=barcodeInfo.value
 
             barcodeScannerBeep.play()
-            speech.speak(value)
+            speech.speak(barcodeInfo.value)
 
             }
         }

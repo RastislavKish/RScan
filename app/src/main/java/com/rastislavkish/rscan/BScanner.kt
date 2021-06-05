@@ -19,6 +19,19 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 
+class BarcodeInfo(type: Int, value: String) {
+
+    val type=type
+    val value=value
+
+    companion object {
+
+        const val TYPE_EAN_13=1
+        const val TYPE_EAN_8=2
+        const val TYPE_UPC_A=4
+        const val TYPE_UPC_E=8
+        }
+    }
 class BScanner(activity: AppCompatActivity) {
 
     private val activity=activity
@@ -29,12 +42,12 @@ class BScanner(activity: AppCompatActivity) {
     private val scanner: BarcodeScanner
     private val imageAnalysis: ImageAnalysis
 
-    private var barcodeDetectedListeners=mutableListOf<(String) -> Unit>()
+    private var barcodeDetectedListeners=mutableListOf<(BarcodeInfo) -> Unit>()
 
     init {
 
         val options=BarcodeScannerOptions.Builder()
-        .setBarcodeFormats(Barcode.FORMAT_EAN_13)
+        .setBarcodeFormats(Barcode.FORMAT_EAN_13, Barcode.FORMAT_EAN_8, Barcode.FORMAT_UPC_A, Barcode.FORMAT_UPC_E)
         .build()
 
         scanner=BarcodeScanning.getClient(options)
@@ -59,7 +72,7 @@ class BScanner(activity: AppCompatActivity) {
             }, ContextCompat.getMainExecutor(activity))
         }
 
-    fun addBarcodeDetectedListener(f: (String) -> Unit)
+    fun addBarcodeDetectedListener(f: (BarcodeInfo) -> Unit)
         {
         barcodeDetectedListeners.add(f)
         }
@@ -78,9 +91,18 @@ class BScanner(activity: AppCompatActivity) {
     private fun barcodesDetected(barcodes: List<Barcode>)
         {
         for (barcode in barcodes) {
-            for (f in barcodeDetectedListeners) {
-                if (barcode.rawValue!=null) {
-                    f(barcode.rawValue ?: "")
+            if (barcode.rawValue!=null) {
+                val type=when (barcode.format) {
+                    Barcode.FORMAT_EAN_13 -> BarcodeInfo.TYPE_EAN_13
+                    else -> 0
+                    }
+
+                if (type!=0) {
+                    val barcodeInfo=BarcodeInfo(type, barcode.rawValue ?: "")
+
+                    for (f in barcodeDetectedListeners) {
+                        f(barcodeInfo)
+                        }
                     }
                 }
             }
