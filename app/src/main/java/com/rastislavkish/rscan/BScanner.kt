@@ -19,10 +19,23 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 
-class BarcodeInfo(type: Int, value: String) {
+class BarcodeInfo(type: Int, value: String, description: String="") {
 
     val type=type
     val value=value
+    val description=when (description) {
+        "" -> "${typeToString(type)}: $value"
+        else -> description
+        }
+
+    override fun equals(other: Any?): Boolean
+        {
+        if (other is BarcodeInfo) {
+            return type==other.type && value==other.value
+            }
+
+        return false
+        }
 
     companion object {
 
@@ -30,6 +43,17 @@ class BarcodeInfo(type: Int, value: String) {
         const val TYPE_EAN_8=2
         const val TYPE_UPC_A=4
         const val TYPE_UPC_E=8
+
+        fun typeToString(type: Int): String
+            {
+            return when (type) {
+                TYPE_EAN_13 -> "EAN-13"
+                TYPE_EAN_8 -> "EAN-8"
+                TYPE_UPC_A -> "UPC-A"
+                TYPE_UPC_E -> "UPC-E"
+                else -> "Unknown"
+                };
+            }
         }
     }
 class BScanner(activity: AppCompatActivity) {
@@ -75,6 +99,11 @@ class BScanner(activity: AppCompatActivity) {
     fun addBarcodeDetectedListener(f: (BarcodeInfo) -> Unit)
         {
         barcodeDetectedListeners.add(f)
+        }
+
+    fun deinitialize()
+        {
+        cameraExecutor.shutdown()
         }
 
     private fun analyzeImage(imageProxy: ImageProxy)

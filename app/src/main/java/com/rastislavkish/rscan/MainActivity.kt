@@ -3,18 +3,49 @@ package com.rastislavkish.rscan
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
+import android.view.View
+
+import android.widget.Button
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+
 import com.rastislavkish.rtk.Sound
 import com.rastislavkish.rtk.Speech
 
+class ScanningMode(name: String, code: Int) {
+    //A helper class for linking scanner modes with their text representations
+
+    val name=name
+    val code=code
+
+    companion object {
+
+        val scanningModes=listOf(
+            ScanningMode("Discovery", -1), //Will match everything
+            ScanningMode("EAN-13", BarcodeInfo.TYPE_EAN_13),
+            ScanningMode("EAN-8", BarcodeInfo.TYPE_EAN_8),
+            ScanningMode("UPC-A", BarcodeInfo.TYPE_UPC_A),
+            ScanningMode("UPC-E", BarcodeInfo.TYPE_UPC_E),
+            )
+        }
+    }
 class MainActivity : AppCompatActivity() {
 
     private lateinit var speech: Speech
 
     private val barcodeScannerBeep=Sound()
-    private lateinit var scanner: BScanner
+    private var selectedScanningModeIndex=1
+    private val selectedScanningMode get() = ScanningMode.scanningModes[selectedScanningModeIndex]
     private lateinit var permissionsRequester: PermissionsRequester
 
-    private var lastDetectedBarcode=""
+    private lateinit var rScan: RScan
+    private val scanningResultsAdapter=ScanningResultsAdapter()
+
+    //Components
+
+    private lateinit var scanningResultTextView: TextView
+    private lateinit var scanningModeSelectionTextView: TextView
+    private lateinit var scanningResultsRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,18 +60,64 @@ class MainActivity : AppCompatActivity() {
 
         speech=Speech(this)
 
-        scanner=BScanner(this)
-        scanner.addBarcodeDetectedListener(this::barcodeDetected)
+        rScan=RScan(this)
+        rScan.addNewScanningResultListener(this::newScanningResult)
+
+        //Load the interface
+
+        scanningResultTextView=findViewById(R.id.scanningResultTextView)
+        scanningModeSelectionTextView=findViewById(R.id.scanningModeSelectionTextView)
+        updateScanningModeSelectionTextView()
+
+        scanningResultsRecyclerView=findViewById(R.id.scanningResultsRecyclerView)
+        scanningResultsRecyclerView.adapter=scanningResultsAdapter
+        }
+    override fun onDestroy()
+        {
+        rScan.deinitialize()
+
+        super.onDestroy()
         }
 
-    fun barcodeDetected(barcodeInfo: BarcodeInfo)
+    private fun newScanningResult(barcode: BarcodeInfo)
         {
-        if (barcodeInfo.value!=lastDetectedBarcode) {
-            lastDetectedBarcode=barcodeInfo.value
+        if (selectedScanningModeIndex==0 && !scanningResultsAdapter.addScanningResult(barcode))
+        return
 
-            barcodeScannerBeep.play()
-            speech.speak(barcodeInfo.value)
+        barcodeScannerBeep.play()
+        scanningResultTextView.text=barcode.description
+        speech.speak(barcode.description)
+        }
 
-            }
+    //Interface components events
+
+    fun previousScanningModeButton_click(view: View)
+        {
+        if (selectedScanningModeIndex==0)
+        scanningResultsAdapter.clear()
+
+        selectedScanningModeIndex-=1
+        if (selectedScanningModeIndex<0) selectedScanningModeIndex=ScanningMode.scanningModes.size-1
+
+        rScan.scanningMode=selectedScanningMode.code
+
+        updateScanningModeSelectionTextView()
+        }
+    fun nextScanningModeButton_click(view: View)
+        {
+        if (selectedScanningModeIndex==0)
+        scanningResultsAdapter.clear()
+
+        selectedScanningModeIndex+=1
+        selectedScanningModeIndex%=ScanningMode.scanningModes.size
+
+        rScan.scanningMode=selectedScanningMode.code
+
+        updateScanningModeSelectionTextView()
+        }
+
+    private fun updateScanningModeSelectionTextView()
+        {
+        scanningModeSelectionTextView.text=selectedScanningMode.name
         }
     }
