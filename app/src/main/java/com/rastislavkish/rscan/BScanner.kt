@@ -28,6 +28,8 @@ class BarcodeInfo(type: Int, value: String, description: String="") {
         else -> description
         }
 
+    fun csv(): String="${typeToString(type)},$value,$description"
+
     override fun equals(other: Any?): Boolean
         {
         if (other is BarcodeInfo) {
@@ -43,6 +45,30 @@ class BarcodeInfo(type: Int, value: String, description: String="") {
         const val TYPE_EAN_8=2
         const val TYPE_UPC_A=4
         const val TYPE_UPC_E=8
+
+        fun fromCsv(csv: String): BarcodeInfo?
+            {
+            val fields=csv.split(",")
+
+            if (fields.size!=3)
+            return null
+
+            val type=when (fields[0].lowercase().replace("-", "").replace("_", "").replace(" ", "").trim()) {
+                "ean13" -> TYPE_EAN_13
+                "ean8" -> TYPE_EAN_8
+                "upca" -> TYPE_UPC_A
+                "upce" -> TYPE_UPC_E
+                else -> return null
+                }
+            val value=fields[1]
+
+            if (value=="")
+            return null
+
+            val description=fields[2]
+
+            return BarcodeInfo(type, value, description)
+            }
 
         fun typeToString(type: Int): String
             {

@@ -1,7 +1,8 @@
 package com.rastislavkish.rscan
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 
 import android.view.View
 
@@ -47,7 +48,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var scanningModeSelectionTextView: TextView
     private lateinit var scanningResultsRecyclerView: RecyclerView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+        {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -114,6 +116,15 @@ class MainActivity : AppCompatActivity() {
         rScan.scanningMode=selectedScanningMode.code
 
         updateScanningModeSelectionTextView()
+        }
+
+    fun identifyButton_click(view: View)
+        {
+        if (rScan.scanningResult.value!="") {
+            val intent=Intent(this, BarcodeIdentificationActivity::class.java)
+            intent.putExtra("barcode", rScan.scanningResult.csv())
+            startActivity(intent)
+            }
         }
 
     private fun updateScanningModeSelectionTextView()

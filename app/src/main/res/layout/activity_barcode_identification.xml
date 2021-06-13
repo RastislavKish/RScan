@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BarcodeIdentificationActivity" >
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/upperGuideline"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.2" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/lowerGuideline"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.8" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/leftGuideline"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.3333" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/rightGuideline"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.6666" />
+
+    <TextView
+        android:id="@+id/barcodeInfoTextView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text=""
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/upperGuideline" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/barcodeDescriptionsRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layoutManager="LinearLayoutManager"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upperGuideline"
+        app:layout_constraintBottom_toTopOf="@+id/lowerGuideline" />
+
+    <TextView
+        android:id="@+id/wordCountTextViewLabelTextView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="Number of words to use"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/lowerGuideline"
+        app:layout_constraintBottom_toTopOf="@+id/wordCountTextView" />
+    <Button
+        android:id="@+id/decreaseWordCountButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="&lt;"
+        android:onClick="decreaseWordCountButton_click"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/wordCountTextView"
+        app:layout_constraintTop_toBottomOf="@+id/wordCountTextViewLabelTextView"
+        app:layout_constraintBottom_toBottomOf="parent" />
+    <TextView
+        android:id="@+id/wordCountTextView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text=""
+        app:layout_constraintLeft_toRightOf="@+id/decreaseWordCountButton"
+        app:layout_constraintRight_toLeftOf="@+id/increaseWordCountButton"
+        app:layout_constraintTop_toBottomOf="@+id/wordCountTextViewLabelTextView"
+        app:layout_constraintBottom_toBottomOf="parent" />
+    <Button
+        android:id="@+id/increaseWordCountButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="&gt;"
+        android:onClick="increaseWordCountButton_click"
+        app:layout_constraintLeft_toRightOf="@+id/wordCountTextView"
+        app:layout_constraintRight_toLeftOf="@+id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/wordCountTextViewLabelTextView"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <EditText
+        android:id="@+id/barcodeDescriptionEditText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text=""
+        app:layout_constraintLeft_toRightOf="@+id/leftGuideline"
+        app:layout_constraintRight_toLeftOf="@+id/rightGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/lowerGuideline"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="Save"
+        android:onClick="saveButton_click"
+        app:layout_constraintLeft_toRightOf="@+id/rightGuideline"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lowerGuideline"
+        app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
