@@ -1,9 +1,11 @@
 package com.rastislavkish.rscan
 
+import android.content.Intent
+import android.util.Size
+
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
-import android.util.Size
 
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
@@ -68,6 +70,22 @@ class BarcodeInfo(type: Int, value: String, description: String="") {
             val description=fields[2]
 
             return BarcodeInfo(type, value, description)
+            }
+        fun fromIntent(intent: Intent?, key: String, caller: String=""): BarcodeInfo
+            {
+            if (intent!=null) {
+                val extras=intent.extras
+                if (extras!=null) {
+                    val barcodeCsv=(extras.getCharSequence(key)
+                    ?: throw Exception("$caller did not receive a barcode in received intent on key \"$key\"."))
+                    .toString()
+
+                    return BarcodeInfo.fromCsv(barcodeCsv)
+                    ?: throw Exception("Barcode received by $caller is invalid.")
+                    }
+                else throw Exception("$caller did not receive any extras in the received intent.")
+                }
+            else throw Exception("$caller did not receive any intent.")
             }
 
         fun typeToString(type: Int): String
@@ -149,6 +167,9 @@ class BScanner(activity: AppCompatActivity) {
             if (barcode.rawValue!=null) {
                 val type=when (barcode.format) {
                     Barcode.FORMAT_EAN_13 -> BarcodeInfo.TYPE_EAN_13
+                    Barcode.FORMAT_EAN_8 -> BarcodeInfo.TYPE_EAN_8
+                    Barcode.FORMAT_UPC_A -> BarcodeInfo.TYPE_UPC_A
+                    Barcode.FORMAT_UPC_E -> BarcodeInfo.TYPE_UPC_E
                     else -> 0
                     }
 

@@ -3,6 +3,9 @@ package com.rastislavkish.rscan
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 
 import android.view.View
 
@@ -41,6 +44,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var rScan: RScan
     private val scanningResultsAdapter=ScanningResultsAdapter()
+    private lateinit var barcodeIdentificationActivityLauncher: ActivityResultLauncher<Intent>
 
     //Components
 
@@ -60,10 +64,14 @@ class MainActivity : AppCompatActivity() {
             permissionsRequester.requestPermissions(this)
             }
 
+        barcodeIdentificationActivityLauncher=registerForActivityResult(StartActivityForResult(), this::barcodeIdentificationActivityResult)
+
         speech=Speech(this)
 
         rScan=RScan(this)
         rScan.addNewScanningResultListener(this::newScanningResult)
+
+        scanningResultsAdapter.addScanningResultSelectedListener(this::scanningResultSelected)
 
         //Load the interface
 
@@ -89,6 +97,18 @@ class MainActivity : AppCompatActivity() {
         barcodeScannerBeep.play()
         scanningResultTextView.text=barcode.description
         speech.speak(barcode.description)
+        }
+    private fun scanningResultSelected(scanningResult: BarcodeInfo)
+        {
+        startBarcodeIdentificationActivity(scanningResult)
+        }
+    private fun barcodeIdentificationActivityResult(result: ActivityResult)
+        {
+        if (result.resultCode==RESULT_OK) {
+            val barcode=BarcodeInfo.fromIntent(result.data, "result", "MainActivity")
+
+
+            }
         }
 
     //Interface components events
@@ -121,12 +141,16 @@ class MainActivity : AppCompatActivity() {
     fun identifyButton_click(view: View)
         {
         if (rScan.scanningResult.value!="") {
-            val intent=Intent(this, BarcodeIdentificationActivity::class.java)
-            intent.putExtra("barcode", rScan.scanningResult.csv())
-            startActivity(intent)
+            startBarcodeIdentificationActivity(rScan.scanningResult)
             }
         }
 
+    private fun startBarcodeIdentificationActivity(barcode: BarcodeInfo)
+        {
+        val intent=Intent(this, BarcodeIdentificationActivity::class.java)
+        intent.putExtra("barcode", rScan.scanningResult.csv())
+        barcodeIdentificationActivityLauncher.launch(intent)
+        }
     private fun updateScanningModeSelectionTextView()
         {
         scanningModeSelectionTextView.text=selectedScanningMode.name
