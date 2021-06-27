@@ -15,8 +15,8 @@ class BarcodeDescriptionsAdapter(barcodeDescriptionsList: List<String>): Recycle
 
     class BarcodeDescriptionViewHolder(view: View, descriptionSelectedListeners: MutableList<(String) -> Unit>): RecyclerView.ViewHolder(view) {
 
-        val itemTextView: TextView=view.findViewById(R.id.itemTextView)
-        val descriptionSelectedListeners=descriptionSelectedListeners
+        private val itemTextView: TextView=view.findViewById(R.id.itemTextView)
+        private val descriptionSelectedListeners=descriptionSelectedListeners
 
         init {
             itemTextView.setOnClickListener(this::itemTextView_click)

@@ -11,79 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.2" />
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/leftVerticalGuideline"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.1" />
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/rightVerticalGuideline"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.9" />
-
-    <TextView
-        android:id="@+id/scanningModeTextView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="Scanning mode"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/leftVerticalGuideline"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/scanningModeSelectionTextView" />
-    <Button
-        android:id="@+id/previousScanningModeButton"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="&lt;"
-        android:onClick="previousScanningModeButton_click"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/scanningModeSelectionTextView"
-        app:layout_constraintTop_toBottomOf="@+id/scanningModeTextView"
-        app:layout_constraintBottom_toTopOf="@+id/mainGuideline" />
-    <TextView
-        android:id="@+id/scanningModeSelectionTextView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text=""
-        app:layout_constraintLeft_toRightOf="@+id/previousScanningModeButton"
-        app:layout_constraintRight_toLeftOf="@+id/nextScanningModeButton"
-        app:layout_constraintTop_toBottomOf="@+id/scanningModeTextView"
-        app:layout_constraintBottom_toTopOf="@+id/mainGuideline" />
-    <Button
-        android:id="@+id/nextScanningModeButton"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="&gt;"
-        android:onClick="nextScanningModeButton_click"
-        app:layout_constraintLeft_toRightOf="@+id/scanningModeSelectionTextView"
-        app:layout_constraintRight_toLeftOf="@+id/leftVerticalGuideline"
-        app:layout_constraintTop_toBottomOf="@+id/scanningModeTextView"
-        app:layout_constraintBottom_toTopOf="@+id/mainGuideline" />
-
-    <TextView
-        android:id="@+id/scanningResultTextView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text=""
-        app:layout_constraintLeft_toRightOf="@+id/leftVerticalGuideline"
-        app:layout_constraintRight_toLeftOf="@+id/rightVerticalGuideline"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/mainGuideline" />
-
-    <Button
-        android:id="@+id/identifyButton"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="Identify"
-        android:onClick="identifyButton_click"
-        app:layout_constraintLeft_toRightOf="@+id/rightVerticalGuideline"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/mainGuideline" />
+        app:layout_constraintGuide_percent="0.8" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/scanningResultsRecyclerView"
@@ -91,6 +19,27 @@
         android:layout_height="0dp"
         app:layoutManager="LinearLayoutManager"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/mainGuideline" />
+
+    <Button
+        android:id="@+id/clearListButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="Clear list"
+        android:onClick="clearListButton_click"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/flashlightToggleButton"
+        app:layout_constraintTop_toBottomOf="@+id/mainGuideline"
+        app:layout_constraintBottom_toBottomOf="parent" />
+    <ToggleButton
+        android:id="@+id/flashlightToggleButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="Use flashlight"
+        android:onClick="flashlightToggleButton_click"
+        app:layout_constraintLeft_toRightOf="@+id/clearListButton"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mainGuideline"
         app:layout_constraintBottom_toBottomOf="parent" />

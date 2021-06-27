@@ -13,13 +13,13 @@ class ScanningResultsAdapter: RecyclerView.Adapter<ScanningResultsAdapter.Scanni
 
     class ScanningResultViewHolder(view: View, scanningResultSelectedListeners: MutableList<(BarcodeInfo) -> Unit>): RecyclerView.ViewHolder(view) {
 
-        val itemTextView: TextView=view.findViewById(R.id.itemTextView)
+        private val itemTextView: TextView=view.findViewById(R.id.itemTextView)
 
         init {
             itemTextView.setOnClickListener(this::itemTextView_click)
             }
 
-        val scanningResultSelectedListeners=scanningResultSelectedListeners
+        private val scanningResultSelectedListeners=scanningResultSelectedListeners
 
         private var scanningResult: BarcodeInfo=BarcodeInfo(0, "")
 
@@ -61,9 +61,9 @@ class ScanningResultsAdapter: RecyclerView.Adapter<ScanningResultsAdapter.Scanni
         if (scanningResult in scanningResultsList)
         return false
 
-        scanningResultsList.add(scanningResult)
+        scanningResultsList.add(0, scanningResult)
 
-        notifyItemInserted(scanningResultsList.size-1)
+        notifyItemInserted(0)
 
         return true
         }

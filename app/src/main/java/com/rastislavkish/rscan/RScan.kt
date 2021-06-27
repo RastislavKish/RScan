@@ -4,11 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 
 class RScan(activity: AppCompatActivity) {
 
-    var scanningResult: BarcodeInfo=BarcodeInfo(BarcodeInfo.TYPE_EAN_13, "")
-    private set
-
-    var scanningMode: Int=BarcodeInfo.TYPE_EAN_13
-
     private val bScanner=BScanner(activity)
     private val newScanningResultListeners=mutableListOf<(BarcodeInfo) -> Unit>()
 
@@ -23,6 +18,11 @@ class RScan(activity: AppCompatActivity) {
         newScanningResultListeners.add(f)
         }
 
+    fun setFlashlightState(state: Boolean)
+        {
+        bScanner.flashlight=state
+        }
+
     fun deinitialize()
         {
         bScanner.deinitialize()
@@ -30,24 +30,17 @@ class RScan(activity: AppCompatActivity) {
 
     private fun barcodeDetected(barcode: BarcodeInfo)
         {
-        //First of all, make sure the detected barcode is new
-
-        if (barcode==scanningResult) return
-
         //Check if we know the barcode
 
         if (barcode in barcodesCache) {
-            scanningResult=barcodesCache[barcodesCache.indexOf(barcode)]
+            val scanningResult=barcodesCache[barcodesCache.indexOf(barcode)]
             raiseNewScanningResultEvent(scanningResult)
             return
             }
 
-        //If not, check the scanning mode, whether we should accept it
+        //Else, forward the event
 
-        if ((scanningMode and barcode.type)==barcode.type) {
-            scanningResult=barcode
-            raiseNewScanningResultEvent(barcode)
-            }
+        raiseNewScanningResultEvent(barcode)
         }
     private fun raiseNewScanningResultEvent(barcode: BarcodeInfo)
         {

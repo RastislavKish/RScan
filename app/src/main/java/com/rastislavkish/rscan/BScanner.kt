@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 
+import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
@@ -29,6 +30,7 @@ class BarcodeInfo(type: Int, value: String, description: String="") {
         "" -> "${typeToString(type)}: $value"
         else -> description
         }
+    val known=description!=""
 
     fun csv(): String="${typeToString(type)},$value,$description"
 
@@ -102,8 +104,20 @@ class BarcodeInfo(type: Int, value: String, description: String="") {
     }
 class BScanner(activity: AppCompatActivity) {
 
+    var flashlight: Boolean=false
+    set(value)
+        {
+        if (camera!=null) {
+            if (camera?.cameraInfo?.hasFlashUnit()==true) {
+                camera?.cameraControl?.enableTorch(value)
+                field=value
+                }
+            }
+        }
+
     private val activity=activity
 
+    private var camera: Camera?=null
     private val cameraExecutor=Executors.newSingleThreadExecutor()
     private var cameraProvider: ProcessCameraProvider?=null
 
@@ -131,12 +145,8 @@ class BScanner(activity: AppCompatActivity) {
         cameraProviderFuture.addListener(Runnable {
             cameraProvider=cameraProviderFuture.get()
 
-            val camera=cameraProvider?.bindToLifecycle(activity, CameraSelector.DEFAULT_BACK_CAMERA, imageAnalysis)
-            if (camera!=null) {
-                if (camera.cameraInfo.hasFlashUnit()) {
-                    camera.cameraControl.enableTorch(true)
-                    }
-                }
+            camera=cameraProvider?.bindToLifecycle(activity, CameraSelector.DEFAULT_BACK_CAMERA, imageAnalysis)
+            flashlight=true
             }, ContextCompat.getMainExecutor(activity))
         }
 

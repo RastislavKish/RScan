@@ -10,36 +10,17 @@ import androidx.activity.result.contract.ActivityResultContracts.StartActivityFo
 import android.view.View
 
 import android.widget.Button
-import android.widget.TextView
+import android.widget.ToggleButton
 import androidx.recyclerview.widget.RecyclerView
 
 import com.rastislavkish.rtk.Sound
 import com.rastislavkish.rtk.Speech
 
-class ScanningMode(name: String, code: Int) {
-    //A helper class for linking scanner modes with their text representations
-
-    val name=name
-    val code=code
-
-    companion object {
-
-        val scanningModes=listOf(
-            ScanningMode("Discovery", -1), //Will match everything
-            ScanningMode("EAN-13", BarcodeInfo.TYPE_EAN_13),
-            ScanningMode("EAN-8", BarcodeInfo.TYPE_EAN_8),
-            ScanningMode("UPC-A", BarcodeInfo.TYPE_UPC_A),
-            ScanningMode("UPC-E", BarcodeInfo.TYPE_UPC_E),
-            )
-        }
-    }
 class MainActivity : AppCompatActivity() {
 
     private lateinit var speech: Speech
 
     private val barcodeScannerBeep=Sound()
-    private var selectedScanningModeIndex=1
-    private val selectedScanningMode get() = ScanningMode.scanningModes[selectedScanningModeIndex]
     private lateinit var permissionsRequester: PermissionsRequester
 
     private lateinit var rScan: RScan
@@ -48,9 +29,9 @@ class MainActivity : AppCompatActivity() {
 
     //Components
 
-    private lateinit var scanningResultTextView: TextView
-    private lateinit var scanningModeSelectionTextView: TextView
     private lateinit var scanningResultsRecyclerView: RecyclerView
+
+    private lateinit var flashlightToggleButton: ToggleButton
 
     override fun onCreate(savedInstanceState: Bundle?)
         {
@@ -75,9 +56,8 @@ class MainActivity : AppCompatActivity() {
 
         //Load the interface
 
-        scanningResultTextView=findViewById(R.id.scanningResultTextView)
-        scanningModeSelectionTextView=findViewById(R.id.scanningModeSelectionTextView)
-        updateScanningModeSelectionTextView()
+        flashlightToggleButton=findViewById(R.id.flashlightToggleButton)
+        flashlightToggleButton.setChecked(true)
 
         scanningResultsRecyclerView=findViewById(R.id.scanningResultsRecyclerView)
         scanningResultsRecyclerView.adapter=scanningResultsAdapter
@@ -89,14 +69,16 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         }
 
-    private fun newScanningResult(barcode: BarcodeInfo)
+    private fun newScanningResult(scanningResult: BarcodeInfo)
         {
-        if (selectedScanningModeIndex==0 && !scanningResultsAdapter.addScanningResult(barcode))
+        if (!scanningResultsAdapter.addScanningResult(scanningResult))
         return
 
         barcodeScannerBeep.play()
-        scanningResultTextView.text=barcode.description
-        speech.speak(barcode.description)
+        if (scanningResult.known)
+        speech.speak(scanningResult.description)
+        else
+        speech.speak(BarcodeInfo.typeToString(scanningResult.type), false)
         }
     private fun scanningResultSelected(scanningResult: BarcodeInfo)
         {
@@ -113,46 +95,19 @@ class MainActivity : AppCompatActivity() {
 
     //Interface components events
 
-    fun previousScanningModeButton_click(view: View)
+    fun clearListButton_click(view: View)
         {
-        if (selectedScanningModeIndex==0)
         scanningResultsAdapter.clear()
-
-        selectedScanningModeIndex-=1
-        if (selectedScanningModeIndex<0) selectedScanningModeIndex=ScanningMode.scanningModes.size-1
-
-        rScan.scanningMode=selectedScanningMode.code
-
-        updateScanningModeSelectionTextView()
         }
-    fun nextScanningModeButton_click(view: View)
+    fun flashlightToggleButton_click(view: View)
         {
-        if (selectedScanningModeIndex==0)
-        scanningResultsAdapter.clear()
-
-        selectedScanningModeIndex+=1
-        selectedScanningModeIndex%=ScanningMode.scanningModes.size
-
-        rScan.scanningMode=selectedScanningMode.code
-
-        updateScanningModeSelectionTextView()
-        }
-
-    fun identifyButton_click(view: View)
-        {
-        if (rScan.scanningResult.value!="") {
-            startBarcodeIdentificationActivity(rScan.scanningResult)
-            }
+        rScan.setFlashlightState(flashlightToggleButton.isChecked())
         }
 
     private fun startBarcodeIdentificationActivity(barcode: BarcodeInfo)
         {
         val intent=Intent(this, BarcodeIdentificationActivity::class.java)
-        intent.putExtra("barcode", rScan.scanningResult.csv())
+        intent.putExtra("barcode", barcode.csv())
         barcodeIdentificationActivityLauncher.launch(intent)
-        }
-    private fun updateScanningModeSelectionTextView()
-        {
-        scanningModeSelectionTextView.text=selectedScanningMode.name
         }
     }
