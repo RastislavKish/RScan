@@ -1,16 +1,6 @@
 package com.rastislavkish.rscan
 
-import android.util.Log
-
-import java.net.URL
-import java.util.Scanner
-import javax.net.ssl.HttpsURLConnection
-
 import kotlin.concurrent.thread
-
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 import org.jsoup.Jsoup
 

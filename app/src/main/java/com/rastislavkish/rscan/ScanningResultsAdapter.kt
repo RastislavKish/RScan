@@ -67,6 +67,22 @@ class ScanningResultsAdapter: RecyclerView.Adapter<ScanningResultsAdapter.Scanni
 
         return true
         }
+    fun removeScanningResult(scanningResult: BarcodeInfo): Boolean
+        {
+        if (scanningResult !in scanningResultsList)
+        return false
+
+        val listIndex=scanningResultsList.indexOf(scanningResult)
+        if (listIndex>-1) {
+            scanningResultsList.removeAt(listIndex)
+
+            notifyItemRemoved(listIndex)
+
+            return true
+            }
+
+        return false
+        }
     fun clear()
         {
         val itemCount=scanningResultsList.size

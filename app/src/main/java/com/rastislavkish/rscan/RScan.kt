@@ -7,10 +7,18 @@ class RScan(activity: AppCompatActivity) {
     private val bScanner=BScanner(activity)
     private val newScanningResultListeners=mutableListOf<(BarcodeInfo) -> Unit>()
 
-    private val barcodesCache=mutableListOf<BarcodeInfo>()
+    private val barcodeCache=BarcodeCache(activity.getSharedPreferences("BarcodeCache", AppCompatActivity.MODE_PRIVATE))
 
     init {
+        barcodeCache.load()
+
         bScanner.addBarcodeDetectedListener(this::barcodeDetected)
+        }
+
+    fun cacheBarcode(barcode: BarcodeInfo)
+        {
+        barcodeCache.addBarcode(barcode)
+        barcodeCache.save()
         }
 
     fun addNewScanningResultListener(f: (BarcodeInfo) -> Unit)
@@ -32,11 +40,9 @@ class RScan(activity: AppCompatActivity) {
         {
         //Check if we know the barcode
 
-        if (barcode in barcodesCache) {
-            val scanningResult=barcodesCache[barcodesCache.indexOf(barcode)]
-            raiseNewScanningResultEvent(scanningResult)
-            return
-            }
+        val cachedBarcode=barcodeCache.getBarcode(barcode)
+        if (cachedBarcode!=null)
+        raiseNewScanningResultEvent(cachedBarcode)
 
         //Else, forward the event
 

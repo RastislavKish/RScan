@@ -89,7 +89,8 @@ class MainActivity : AppCompatActivity() {
         if (result.resultCode==RESULT_OK) {
             val barcode=BarcodeInfo.fromIntent(result.data, "result", "MainActivity")
 
-
+            if (scanningResultsAdapter.removeScanningResult(barcode))
+            rScan.cacheBarcode(barcode)
             }
         }
 

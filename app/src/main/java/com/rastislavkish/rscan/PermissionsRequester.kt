@@ -20,8 +20,4 @@ class PermissionsRequester(context: Context) {
         {
         ActivityCompat.requestPermissions(activity, arrayOf("android.permission.CAMERA"), 1)
         }
-
-    companion object {
-        private const val CAMERA_PERMISSION_CODE=1
-        }
     }
