@@ -65,7 +65,7 @@ class BScanner(activity: AppCompatActivity) {
             cameraProvider=cameraProviderFuture.get()
 
             camera=cameraProvider?.bindToLifecycle(activity, CameraSelector.DEFAULT_BACK_CAMERA, imageAnalysis)
-            flashlight=true
+            flashlight=false
             }, ContextCompat.getMainExecutor(activity))
         }
 

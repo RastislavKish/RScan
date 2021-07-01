@@ -1,7 +1,10 @@
 package com.rastislavkish.rscan
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -23,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     private val barcodeScannerBeep=Sound()
     private lateinit var permissionsRequester: PermissionsRequester
 
+    private lateinit var settings: Settings
     private lateinit var rScan: RScan
     private val scanningResultsAdapter=ScanningResultsAdapter()
     private lateinit var barcodeIdentificationActivityLauncher: ActivityResultLauncher<Intent>
@@ -38,6 +42,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        settings=Settings(getSharedPreferences("RScanSettings", MODE_PRIVATE))
+        settings.load()
+
         barcodeScannerBeep.load("BarcodeScannerBeep.opus", this)
 
         permissionsRequester=PermissionsRequester(this)
@@ -51,13 +58,16 @@ class MainActivity : AppCompatActivity() {
 
         rScan=RScan(this)
         rScan.addNewScanningResultListener(this::newScanningResult)
+        Handler(Looper.getMainLooper()).postDelayed({
+            rScan.setFlashlightState(settings.useFlashlight)
+            }, 1000)
 
         scanningResultsAdapter.addScanningResultSelectedListener(this::scanningResultSelected)
 
         //Load the interface
 
         flashlightToggleButton=findViewById(R.id.flashlightToggleButton)
-        flashlightToggleButton.setChecked(true)
+        flashlightToggleButton.setChecked(settings.useFlashlight)
 
         scanningResultsRecyclerView=findViewById(R.id.scanningResultsRecyclerView)
         scanningResultsRecyclerView.adapter=scanningResultsAdapter
@@ -102,7 +112,9 @@ class MainActivity : AppCompatActivity() {
         }
     fun flashlightToggleButton_click(view: View)
         {
-        rScan.setFlashlightState(flashlightToggleButton.isChecked())
+        settings.useFlashlight=flashlightToggleButton.isChecked()
+        settings.save()
+        rScan.setFlashlightState(settings.useFlashlight)
         }
 
     private fun startBarcodeIdentificationActivity(barcode: BarcodeInfo)
