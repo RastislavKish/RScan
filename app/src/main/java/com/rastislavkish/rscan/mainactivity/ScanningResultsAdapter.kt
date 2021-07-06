@@ -1,10 +1,13 @@
-package com.rastislavkish.rscan
+package com.rastislavkish.rscan.mainactivity
 
 import android.view.View
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+
+import com.rastislavkish.rscan.R
+import com.rastislavkish.rscan.core.BarcodeInfo
 
 class ScanningResultsAdapter: RecyclerView.Adapter<ScanningResultsAdapter.ScanningResultViewHolder>() {
 

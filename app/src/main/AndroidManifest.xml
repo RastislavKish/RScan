@@ -14,14 +14,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RScan">
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".mainactivity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
 
                 </intent-filter>
             </activity>
-        <activity android:name="BarcodeIdentificationActivity">
+        <activity android:name=".barcodeidentificationactivity.BarcodeIdentificationActivity">
 
             </activity>
         </application>

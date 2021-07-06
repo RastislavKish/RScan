@@ -1,4 +1,4 @@
-package com.rastislavkish.rscan
+package com.rastislavkish.rscan.core
 
 import kotlin.concurrent.thread
 

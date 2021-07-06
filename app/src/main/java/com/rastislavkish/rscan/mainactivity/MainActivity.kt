@@ -1,4 +1,4 @@
-package com.rastislavkish.rscan
+package com.rastislavkish.rscan.mainactivity
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -18,6 +18,13 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.rastislavkish.rtk.Sound
 import com.rastislavkish.rtk.Speech
+
+import com.rastislavkish.rscan.R
+import com.rastislavkish.rscan.core.BarcodeInfo
+import com.rastislavkish.rscan.core.PermissionsRequester
+import com.rastislavkish.rscan.core.RScan
+import com.rastislavkish.rscan.core.Settings
+import com.rastislavkish.rscan.barcodeidentificationactivity.BarcodeIdentificationActivity
 
 class MainActivity : AppCompatActivity() {
 

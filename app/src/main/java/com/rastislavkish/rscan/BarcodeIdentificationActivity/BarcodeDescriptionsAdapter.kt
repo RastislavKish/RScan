@@ -1,4 +1,4 @@
-package com.rastislavkish.rscan
+package com.rastislavkish.rscan.barcodeidentificationactivity
 
 import android.view.View
 import android.view.LayoutInflater
@@ -7,6 +7,8 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+
+import com.rastislavkish.rscan.R
 
 class BarcodeDescriptionsAdapter(barcodeDescriptionsList: List<String>): RecyclerView.Adapter<BarcodeDescriptionsAdapter.BarcodeDescriptionViewHolder>() {
 

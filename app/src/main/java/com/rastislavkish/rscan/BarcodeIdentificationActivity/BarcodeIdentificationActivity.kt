@@ -1,4 +1,4 @@
-package com.rastislavkish.rscan
+package com.rastislavkish.rscan.barcodeidentificationactivity
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,6 +11,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 import com.rastislavkish.rtk.Speech
+
+import com.rastislavkish.rscan.R
+import com.rastislavkish.rscan.core.BarcodeInfo
+import com.rastislavkish.rscan.core.DuckDuckGoBarcodeLookupper
 
 class BarcodeIdentificationActivity: AppCompatActivity() {
 

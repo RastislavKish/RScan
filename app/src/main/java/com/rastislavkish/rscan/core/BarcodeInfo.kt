@@ -1,4 +1,4 @@
-package com.rastislavkish.rscan
+package com.rastislavkish.rscan.core
 
 import android.content.Intent
 import android.util.Base64
