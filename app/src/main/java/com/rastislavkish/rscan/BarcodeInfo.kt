@@ -1,6 +1,9 @@
 package com.rastislavkish.rscan
 
 import android.content.Intent
+import android.util.Base64
+
+import java.nio.charset.StandardCharsets
 
 class BarcodeInfo(type: Int, value: String, description: String="") {
 
@@ -12,7 +15,7 @@ class BarcodeInfo(type: Int, value: String, description: String="") {
         }
     val known=description!=""
 
-    fun csv(): String="${typeToString(type)},$value,$description"
+    fun csv(): String="${typeToString(type)},$value,${String(Base64.encode(description.toByteArray(StandardCharsets.UTF_8), Base64.DEFAULT), StandardCharsets.UTF_8)}"
 
     override fun equals(other: Any?): Boolean
         {
@@ -49,7 +52,7 @@ class BarcodeInfo(type: Int, value: String, description: String="") {
             if (value=="")
             return null
 
-            val description=fields[2]
+            val description=String(Base64.decode(fields[2], Base64.DEFAULT), StandardCharsets.UTF_8)
 
             return BarcodeInfo(type, value, description)
             }
