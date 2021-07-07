@@ -38,6 +38,8 @@ All scanned barcodes will appear in the scanning results list, where you can des
 
 You can also activate your flashlight to get better results using the Use flashlight toggle. There is currently no automatic mode, so you'll have to either turn it on or off.
 
+You can also import and export your barcode database called BarcodeCache, using the respective buttons on the bottom bar. Currently these operations support only reading from and writing to clipboard, it's a temporary solution until I get more familiar with the new Android Q scoped file operations.
+
 ### Barcode identification screen
 
 After tapping on a scanned barcode, the barcode identification screen will appear. The most important part is the bottom bar with an EditText and the Save button. Here you can set the description of the product and save it to your database.
