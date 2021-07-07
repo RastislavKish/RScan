@@ -54,7 +54,7 @@ The value of 0 means that the selector is disabled and the entered description w
 
 The suggested descriptions, while helpful and often quite accurate, are just searches of the barcode on DuckDuckGo. There is no guarantee that a true match was found and the description really matches the product.\
 In cases where a reliable identification is necessary, like with drugs, please take additional steps to verify the correctness of the suggestions either by searching the code manually, using an OCR program or asking a sighted person.\
-The author of the program, as stated by [The GNU General Public License v3,](https://www.gnu.org/licenses/gpl-3.0.html) is in no way responsible for any damage caused directly or indirectly by the app or its users, see the license for more details.
+The author of the program, as stated by [The GNU General Public License version 3,](https://github.com/RastislavKish/RScan/blob/main/LICENSE) is in no way responsible for any damage caused directly or indirectly by the app or its users, see the license for more details.
 
 ## Scanning tips
 
