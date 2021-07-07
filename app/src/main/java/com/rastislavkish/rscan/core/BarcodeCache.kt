@@ -34,6 +34,33 @@ class BarcodeCache(preferences: SharedPreferences) {
         .apply()
         }
 
+    fun importCsv(csv: String?): Boolean
+        {
+        if (csv!=null) {
+            val localCache=mutableListOf<BarcodeInfo>()
+
+            for (line in csv.split("\n")) {
+                val barcode=BarcodeInfo.fromCsv(line)
+
+                if (barcode!=null) {
+                    localCache.add(barcode)
+                    }
+                }
+
+            if (localCache.size>=1) {
+                cache=localCache
+                save()
+                return true
+                }
+            }
+
+        return false
+        }
+    fun exportCsv(): String
+        {
+        return cache.map({ it.csv() }).joinToString("\n")
+        }
+
     fun addBarcode(barcode: BarcodeInfo)
         {
         if (barcode in cache)

@@ -41,6 +41,26 @@
         android:textOn="Use flashlight"
         android:onClick="flashlightToggleButton_click"
         app:layout_constraintLeft_toRightOf="@+id/clearListButton"
+        app:layout_constraintRight_toLeftOf="@+id/importFromClipboardButton"
+        app:layout_constraintTop_toBottomOf="@+id/mainGuideline"
+        app:layout_constraintBottom_toBottomOf="parent" />
+    <Button
+        android:id="@+id/importFromClipboardButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="Import from clipboard"
+        android:onClick="importFromClipboardButton_click"
+        app:layout_constraintLeft_toRightOf="@+id/flashlightToggleButton"
+        app:layout_constraintRight_toLeftOf="@+id/exportToClipboardButton"
+        app:layout_constraintTop_toBottomOf="@+id/mainGuideline"
+        app:layout_constraintBottom_toBottomOf="parent" />
+    <Button
+        android:id="@+id/exportToClipboardButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="Export to clipboard"
+        android:onClick="exportToClipboardButton_click"
+        app:layout_constraintLeft_toRightOf="@+id/importFromClipboardButton"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mainGuideline"
         app:layout_constraintBottom_toBottomOf="parent" />

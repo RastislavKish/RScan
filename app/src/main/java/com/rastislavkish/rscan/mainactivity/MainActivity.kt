@@ -123,6 +123,18 @@ class MainActivity : AppCompatActivity() {
         settings.save()
         rScan.setFlashlightState(settings.useFlashlight)
         }
+    fun importFromClipboardButton_click(view: View)
+        {
+        if (rScan.importFromClipboard())
+        speech.speak("Import successful")
+        else
+        speech.speak("Import failed.")
+        }
+    fun exportToClipboardButton_click(view: View)
+        {
+        rScan.exportToClipboard()
+        speech.speak("Copied")
+        }
 
     private fun startBarcodeIdentificationActivity(barcode: BarcodeInfo)
         {
