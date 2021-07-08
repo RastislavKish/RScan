@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/mainGuideline"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.8" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/scanningResultsRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layoutManager="LinearLayoutManager"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/mainGuideline" />
+
+    <Button
+        android:id="@+id/clearListButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="Clear list"
+        android:onClick="clearListButton_click"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/flashlightToggleButton"
+        app:layout_constraintTop_toBottomOf="@+id/mainGuideline"
+        app:layout_constraintBottom_toBottomOf="parent" />
+    <ToggleButton
+        android:id="@+id/flashlightToggleButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:textOff="Use flashlight"
+        android:textOn="Use flashlight"
+        android:onClick="flashlightToggleButton_click"
+        app:layout_constraintLeft_toRightOf="@+id/clearListButton"
+        app:layout_constraintRight_toLeftOf="@+id/importFromClipboardButton"
+        app:layout_constraintTop_toBottomOf="@+id/mainGuideline"
+        app:layout_constraintBottom_toBottomOf="parent" />
+    <Button
+        android:id="@+id/importFromClipboardButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="Import from clipboard"
+        android:onClick="importFromClipboardButton_click"
+        app:layout_constraintLeft_toRightOf="@+id/flashlightToggleButton"
+        app:layout_constraintRight_toLeftOf="@+id/exportToClipboardButton"
+        app:layout_constraintTop_toBottomOf="@+id/mainGuideline"
+        app:layout_constraintBottom_toBottomOf="parent" />
+    <Button
+        android:id="@+id/exportToClipboardButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="Export to clipboard"
+        android:onClick="exportToClipboardButton_click"
+        app:layout_constraintLeft_toRightOf="@+id/importFromClipboardButton"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainGuideline"
+        app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
