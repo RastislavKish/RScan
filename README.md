@@ -22,9 +22,11 @@ Over time, your local database should cover everything you normally use, making 
 
 Note that RScan is not a general purpose barcode scanner, it's aimed primarily for direct product identification. Therefore, supported barcode types are limited to those usable for this purpose and formats like QR codes along with their sharing functionalities aren't and most likely won't be supported.
 
-## Build
+## Installation
 
-Once you have Android SDK in place, all you need to do to compile RScan is:\
+The easiest way to get RScan up and running is to install it wia [F-Droid,](https://fdroid.org/) the open source app repository for Android.
+
+Alternatively, you can also compile and run the program from source. Once you have JDK 11 and Android SDK in place, all you need to do to compile RScan is:\
 ```./gradlew assembleDebug```\
 or release, according to your needs.
 
