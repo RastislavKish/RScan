@@ -1,0 +1,1 @@
+- Jednotlivé obrazovky sú teraz fixované na ich najpraktickejšie rozloženia. Hlavná obrazovka používa pre pohodlnejšie scannovanie horizontálne, zatiaľ čo identifikačná obrazovka je vertikálna pre lepšie zobrazenie návrhov.

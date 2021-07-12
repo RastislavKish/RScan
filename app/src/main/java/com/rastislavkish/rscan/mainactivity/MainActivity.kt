@@ -9,7 +9,7 @@
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
@@ -17,6 +17,7 @@
 package com.rastislavkish.rscan.mainactivity
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
@@ -64,6 +65,8 @@ class MainActivity : AppCompatActivity() {
         {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        requestedOrientation=ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
         settings=Settings(getSharedPreferences("RScanSettings", MODE_PRIVATE))
         settings.load()
@@ -122,8 +125,9 @@ class MainActivity : AppCompatActivity() {
         if (result.resultCode==RESULT_OK) {
             val barcode=BarcodeInfo.fromIntent(result.data, "result", "MainActivity")
 
-            if (scanningResultsAdapter.removeScanningResult(barcode))
-            rScan.cacheBarcode(barcode)
+            if (scanningResultsAdapter.removeScanningResult(barcode)) {
+                rScan.cacheBarcode(barcode)
+                }
             }
         }
 

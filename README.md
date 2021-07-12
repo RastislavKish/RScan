@@ -94,6 +94,28 @@ Note that these guidelines are not laws, in theory, a seller can place barcodes 
 
 ## Assets
 
-The program currently contains one asset, the sound of a barcode scanner beep. You can find it [here,](https://freesound.org/people/zerolagtime/sounds/144418/) all rights belong to its authors.\
-It is distributed under the terms of its original license ([Creative Commons 0](https://creativecommons.org/publicdomain/zero/1.0/)).
+The program currently contains these assets, distributed under the following licenses:
+
+Asset | Description | License
+--- | --- | ---
+[BarcodeScannerBeep.opus](https://freesound.org/people/zerolagtime/sounds/144418/) | The barcode scanner's beep sound | [Creative Commons 0](https://creativecommons.org/publicdomain/zero/1.0/)
+[icon.png](https://iconmonstr.com/barcode-1-png/) | The program's main icon | [Iconmonstr's license](https://iconmonstr.com/license/)
+
+None of these assets is my work, all rights belong to their respective authors.
+
+## License
+
+Copyright (C) 2021 Rastislav Kish
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, version 3.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
 

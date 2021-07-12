@@ -1,0 +1,16 @@
+<p>
+RScan allows blind and visually impaired people to quickly recognize any product simply by scanning its barcode!
+</p>
+<p>
+Using a handy local caching system, users can collect relevant descriptions of their day to day used products and save them to a database, so they can hear the most important information in matter of seconds.
+</p>
+<h2>Features</h2>
+<ul>
+<li>Support for EAN-13, EAN-8, UPC-A and UPC-E barcode formats.</li>
+<li>A local barcode caching system, allowing the user to describe a product in any way they want.</li>
+<li>Integrated tools for product identification, including searches from DuckDuckGo and a word selector for minimalization of the keyboard usage.</li>
+</ul>
+<h2>Usage tips</h2>
+<p>
+For detailed description and advices on how to efficiently find and scan a barcode, see the project's <a href="https://github.com/RastislavKish/RScan">official repository.</a>
+</p>

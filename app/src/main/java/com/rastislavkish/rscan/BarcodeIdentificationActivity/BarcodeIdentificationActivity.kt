@@ -9,7 +9,7 @@
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
@@ -17,6 +17,7 @@
 package com.rastislavkish.rscan.barcodeidentificationactivity
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 
@@ -61,6 +62,8 @@ class BarcodeIdentificationActivity: AppCompatActivity() {
         {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_barcode_identification)
+
+        requestedOrientation=ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         barcode=BarcodeInfo.fromIntent(intent, "barcode", "BarcodeIdentificationActivity")
 

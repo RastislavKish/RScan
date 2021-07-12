@@ -1,0 +1,1 @@
+- Rotation of each screen was locked to its most practical form. The main screen is oriented horizontally in order to make scanning more confortable, whereas the barcode identification screen uses vertical layout for better display of suggestions.</li>

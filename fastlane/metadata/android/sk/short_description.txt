@@ -1,0 +1,1 @@
+Praktický skener čiarových kódov pre produktovú identifikáciu.

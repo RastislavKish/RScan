@@ -1,0 +1,1 @@
+ A practical barcode scanner for product identification
