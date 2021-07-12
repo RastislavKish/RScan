@@ -17,6 +17,7 @@
 package com.rastislavkish.rscan.mainactivity
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
@@ -64,6 +65,8 @@ class MainActivity : AppCompatActivity() {
         {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        requestedOrientation=ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
         settings=Settings(getSharedPreferences("RScanSettings", MODE_PRIVATE))
         settings.load()
