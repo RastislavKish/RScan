@@ -20,16 +20,14 @@ import android.content.Context
 import android.content.ClipboardManager
 import android.content.ClipData
 import android.content.ClipDescription
-import androidx.appcompat.app.AppCompatActivity
 
-class RScan(activity: AppCompatActivity) {
+class RScan(context: Context, bScanner: BScanner) {
 
-    private val context=activity
-
-    private val bScanner=BScanner(activity)
+    private val context=context
+    private val bScanner=bScanner
     private val newScanningResultListeners=mutableListOf<(BarcodeInfo) -> Unit>()
 
-    private val barcodeCache=BarcodeCache(activity.getSharedPreferences("BarcodeCache", AppCompatActivity.MODE_PRIVATE))
+    private val barcodeCache=BarcodeCache(context.getSharedPreferences("BarcodeCache", Context.MODE_PRIVATE))
 
     init {
         barcodeCache.load()
@@ -74,11 +72,6 @@ class RScan(activity: AppCompatActivity) {
     fun setFlashlightState(state: Boolean)
         {
         bScanner.flashlight=state
-        }
-
-    fun deinitialize()
-        {
-        bScanner.deinitialize()
         }
 
     private fun barcodeDetected(barcode: BarcodeInfo)

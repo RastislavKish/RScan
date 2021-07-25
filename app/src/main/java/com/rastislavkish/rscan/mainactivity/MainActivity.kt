@@ -33,12 +33,16 @@ import android.widget.Button
 import android.widget.ToggleButton
 import androidx.recyclerview.widget.RecyclerView
 
+import com.budiyev.android.codescanner.CodeScannerView
+import com.budiyev.android.codescanner.CodeScanner
+
 import com.rastislavkish.rtk.Sound
 import com.rastislavkish.rtk.Speech
 
 import com.rastislavkish.rscan.R
 import com.rastislavkish.rscan.core.BarcodeInfo
 import com.rastislavkish.rscan.core.PermissionsRequester
+import com.rastislavkish.rscan.core.BScanner
 import com.rastislavkish.rscan.core.RScan
 import com.rastislavkish.rscan.core.Settings
 import com.rastislavkish.rscan.barcodeidentificationactivity.BarcodeIdentificationActivity
@@ -61,6 +65,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var flashlightToggleButton: ToggleButton
 
+    private lateinit var codeScannerView: CodeScannerView
+
     override fun onCreate(savedInstanceState: Bundle?)
         {
         super.onCreate(savedInstanceState)
@@ -82,27 +88,25 @@ class MainActivity : AppCompatActivity() {
 
         speech=Speech(this)
 
-        rScan=RScan(this)
-        rScan.addNewScanningResultListener(this::newScanningResult)
-        Handler(Looper.getMainLooper()).postDelayed({
-            rScan.setFlashlightState(settings.useFlashlight)
-            }, 1000)
-
         scanningResultsAdapter.addScanningResultSelectedListener(this::scanningResultSelected)
 
         //Load the interface
 
+        scanningResultsRecyclerView=findViewById(R.id.scanningResultsRecyclerView)
+        scanningResultsRecyclerView.adapter=scanningResultsAdapter
+
         flashlightToggleButton=findViewById(R.id.flashlightToggleButton)
         flashlightToggleButton.setChecked(settings.useFlashlight)
 
-        scanningResultsRecyclerView=findViewById(R.id.scanningResultsRecyclerView)
-        scanningResultsRecyclerView.adapter=scanningResultsAdapter
-        }
-    override fun onDestroy()
-        {
-        rScan.deinitialize()
+        codeScannerView=findViewById(R.id.codeScannerView)
 
-        super.onDestroy()
+        //Initialize RScan
+
+        rScan=RScan(this, BScanner(CodeScanner(this, codeScannerView)))
+        rScan.addNewScanningResultListener(this::newScanningResult)
+        Handler(Looper.getMainLooper()).postDelayed({
+            rScan.setFlashlightState(settings.useFlashlight)
+            }, 1000)
         }
 
     private fun newScanningResult(scanningResult: BarcodeInfo)

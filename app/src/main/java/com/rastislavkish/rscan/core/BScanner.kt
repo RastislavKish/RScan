@@ -16,73 +16,36 @@
 
 package com.rastislavkish.rscan.core
 
-import android.util.Size
+import android.os.Handler
+import android.os.Looper
 
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.LifecycleOwner
+import com.budiyev.android.codescanner.CodeScanner
+import com.budiyev.android.codescanner.AutoFocusMode
+import com.budiyev.android.codescanner.ScanMode
+import com.budiyev.android.codescanner.DecodeCallback
 
-import androidx.camera.core.Camera
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageAnalysis
-import androidx.camera.core.ImageProxy
-import androidx.camera.lifecycle.ProcessCameraProvider
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.Result
 
-import java.util.concurrent.Executors
-
-import com.google.mlkit.vision.common.InputImage
-
-import com.google.mlkit.vision.barcode.Barcode
-import com.google.mlkit.vision.barcode.BarcodeScanning
-import com.google.mlkit.vision.barcode.BarcodeScanner
-import com.google.mlkit.vision.barcode.BarcodeScannerOptions
-
-class BScanner(activity: AppCompatActivity) {
+class BScanner(codeScanner: CodeScanner) {
 
     var flashlight: Boolean=false
     set(value)
         {
-        if (camera!=null) {
-            if (camera?.cameraInfo?.hasFlashUnit()==true) {
-                camera?.cameraControl?.enableTorch(value)
-                field=value
-                }
-            }
+        codeScanner.setFlashEnabled(value)
+        field=value
         }
 
-    private val activity=activity
+    private val barcodeDetectedListeners=mutableListOf<(BarcodeInfo) -> Unit>()
 
-    private var camera: Camera?=null
-    private val cameraExecutor=Executors.newSingleThreadExecutor()
-    private var cameraProvider: ProcessCameraProvider?=null
-
-    private val scanner: BarcodeScanner
-    private val imageAnalysis: ImageAnalysis
-
-    private var barcodeDetectedListeners=mutableListOf<(BarcodeInfo) -> Unit>()
+    private val codeScanner=codeScanner
+    private val mainHandler=Handler(Looper.getMainLooper())
 
     init {
-
-        val options=BarcodeScannerOptions.Builder()
-        .setBarcodeFormats(Barcode.FORMAT_EAN_13, Barcode.FORMAT_EAN_8, Barcode.FORMAT_UPC_A, Barcode.FORMAT_UPC_E)
-        .build()
-
-        scanner=BarcodeScanning.getClient(options)
-
-        imageAnalysis=ImageAnalysis.Builder()
-        .setTargetResolution(Size(1920, 1080))
-        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-        .build()
-
-        imageAnalysis.setAnalyzer(cameraExecutor, ImageAnalysis.Analyzer(this::analyzeImage))
-
-        val cameraProviderFuture=ProcessCameraProvider.getInstance(activity)
-        cameraProviderFuture.addListener(Runnable {
-            cameraProvider=cameraProviderFuture.get()
-
-            camera=cameraProvider?.bindToLifecycle(activity, CameraSelector.DEFAULT_BACK_CAMERA, imageAnalysis)
-            flashlight=false
-            }, ContextCompat.getMainExecutor(activity))
+        codeScanner.autoFocusMode=AutoFocusMode.CONTINUOUS
+        codeScanner.scanMode=ScanMode.CONTINUOUS
+        codeScanner.decodeCallback=DecodeCallback(this::barcodeDetected)
+        codeScanner.startPreview()
         }
 
     fun addBarcodeDetectedListener(f: (BarcodeInfo) -> Unit)
@@ -90,43 +53,21 @@ class BScanner(activity: AppCompatActivity) {
         barcodeDetectedListeners.add(f)
         }
 
-    fun deinitialize()
+    private fun barcodeDetected(result: Result)
         {
-        cameraExecutor.shutdown()
-        }
-
-    private fun analyzeImage(imageProxy: ImageProxy)
-        {
-        val mediaImage=imageProxy.image
-        if (mediaImage!=null) {
-            val image=InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
-
-            scanner.process(image)
-            .addOnCompleteListener({ _ -> imageProxy.close() })
-            .addOnSuccessListener(this::barcodesDetected)
+        val barcode=when (result.barcodeFormat) {
+            BarcodeFormat.EAN_13 -> BarcodeInfo(BarcodeInfo.TYPE_EAN_13, result.text)
+            BarcodeFormat.EAN_8 -> BarcodeInfo(BarcodeInfo.TYPE_EAN_8, result.text)
+            BarcodeFormat.UPC_A -> BarcodeInfo(BarcodeInfo.TYPE_UPC_A, result.text)
+            BarcodeFormat.UPC_E -> BarcodeInfo(BarcodeInfo.TYPE_UPC_E, result.text)
+            else -> return
             }
-        }
-    private fun barcodesDetected(barcodes: List<Barcode>)
-        {
-        for (barcode in barcodes) {
-            if (barcode.rawValue!=null) {
-                val type=when (barcode.format) {
-                    Barcode.FORMAT_EAN_13 -> BarcodeInfo.TYPE_EAN_13
-                    Barcode.FORMAT_EAN_8 -> BarcodeInfo.TYPE_EAN_8
-                    Barcode.FORMAT_UPC_A -> BarcodeInfo.TYPE_UPC_A
-                    Barcode.FORMAT_UPC_E -> BarcodeInfo.TYPE_UPC_E
-                    else -> 0
-                    }
 
-                if (type!=0) {
-                    val barcodeInfo=BarcodeInfo(type, barcode.rawValue ?: "")
-
-                    for (f in barcodeDetectedListeners) {
-                        f(barcodeInfo)
-                        }
-                    }
+        mainHandler.post({
+            for (f in barcodeDetectedListeners) {
+                f(barcode)
                 }
-            }
+            })
         }
 
     }

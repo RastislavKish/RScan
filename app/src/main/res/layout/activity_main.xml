@@ -13,6 +13,18 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.8" />
 
+    <com.budiyev.android.codescanner.CodeScannerView
+        android:id="@+id/codeScannerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:autoFocusButtonVisible="false"
+        app:flashButtonVisible="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/mainGuideline"
+        />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/scanningResultsRecyclerView"
         android:layout_width="0dp"
@@ -64,4 +76,5 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mainGuideline"
         app:layout_constraintBottom_toBottomOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
