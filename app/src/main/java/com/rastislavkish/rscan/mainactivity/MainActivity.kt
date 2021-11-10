@@ -16,6 +16,7 @@
 
 package com.rastislavkish.rscan.mainactivity
 
+import android.content.res.Configuration
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.SharedPreferences
@@ -59,12 +60,18 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var flashlightToggleButton: ToggleButton
 
+    private val activityOrientationOk: Boolean
+    get() = resources.configuration.orientation==Configuration.ORIENTATION_LANDSCAPE
+
     override fun onCreate(savedInstanceState: Bundle?)
         {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         requestedOrientation=ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+
+        if (!activityOrientationOk)
+        return
 
         settings=Settings(getSharedPreferences("RScanSettings", MODE_PRIVATE))
         settings.load()
@@ -96,6 +103,11 @@ class MainActivity : AppCompatActivity() {
         }
     override fun onDestroy()
         {
+        if (!activityOrientationOk) {
+            super.onDestroy()
+            return
+            }
+
         rScan.deinitialize()
 
         super.onDestroy()
