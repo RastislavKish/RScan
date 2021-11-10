@@ -42,13 +42,17 @@ class BScanner(activity: AppCompatActivity) {
     var flashlight: Boolean=false
     set(value)
         {
-        if (camera!=null) {
-            if (camera?.cameraInfo?.hasFlashUnit()==true) {
-                camera?.cameraControl?.enableTorch(value)
-                field=value
+        synchronized (flashlightLock) {
+            if (camera!=null) {
+                if (camera?.cameraInfo?.hasFlashUnit()==true) {
+                    camera?.cameraControl?.enableTorch(value)
+                    }
                 }
+            field=value
             }
         }
+
+    private var flashlightLock=Any()
 
     private val activity=activity
 
@@ -78,10 +82,15 @@ class BScanner(activity: AppCompatActivity) {
 
         val cameraProviderFuture=ProcessCameraProvider.getInstance(activity)
         cameraProviderFuture.addListener(Runnable {
-            cameraProvider=cameraProviderFuture.get()
+            synchronized (flashlightLock) {
+                cameraProvider=cameraProviderFuture.get()
 
-            camera=cameraProvider?.bindToLifecycle(activity, CameraSelector.DEFAULT_BACK_CAMERA, imageAnalysis)
-            flashlight=false
+                camera=cameraProvider?.bindToLifecycle(activity, CameraSelector.DEFAULT_BACK_CAMERA, imageAnalysis)
+
+                if (camera?.cameraInfo?.hasFlashUnit()==true) {
+                    camera?.cameraControl?.enableTorch(flashlight)
+                    }
+                }
             }, ContextCompat.getMainExecutor(activity))
         }
 

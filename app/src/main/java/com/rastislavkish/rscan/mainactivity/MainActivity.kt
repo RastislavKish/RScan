@@ -20,8 +20,6 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -84,9 +82,7 @@ class MainActivity : AppCompatActivity() {
 
         rScan=RScan(this)
         rScan.addNewScanningResultListener(this::newScanningResult)
-        Handler(Looper.getMainLooper()).postDelayed({
-            rScan.setFlashlightState(settings.useFlashlight)
-            }, 1000)
+        rScan.setFlashlightState(settings.useFlashlight)
 
         scanningResultsAdapter.addScanningResultSelectedListener(this::scanningResultSelected)
 
