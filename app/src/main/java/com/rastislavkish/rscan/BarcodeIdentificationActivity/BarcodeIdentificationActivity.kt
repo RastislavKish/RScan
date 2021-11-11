@@ -27,6 +27,9 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
+import kotlinx.serialization.*
+import kotlinx.serialization.json.Json
+
 import com.rastislavkish.rtk.Speech
 
 import com.rastislavkish.rscan.R
@@ -122,7 +125,7 @@ class BarcodeIdentificationActivity: AppCompatActivity() {
     fun saveButton_click(view: View)
         {
         val resultIntent=Intent()
-        resultIntent.putExtra("result", BarcodeInfo(barcode.type, barcode.value, getWords(barcodeDescriptionEditText.text.toString(), wordCount)).csv())
+        resultIntent.putExtra("result", Json.encodeToString(BarcodeInfo(barcode.type, barcode.value, getWords(barcodeDescriptionEditText.text.toString(), wordCount))))
         setResult(RESULT_OK, resultIntent)
 
         finish()

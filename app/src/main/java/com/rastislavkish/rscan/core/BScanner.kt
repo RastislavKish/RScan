@@ -120,19 +120,17 @@ class BScanner(activity: AppCompatActivity) {
         for (barcode in barcodes) {
             if (barcode.rawValue!=null) {
                 val type=when (barcode.format) {
-                    Barcode.FORMAT_EAN_13 -> BarcodeInfo.TYPE_EAN_13
-                    Barcode.FORMAT_EAN_8 -> BarcodeInfo.TYPE_EAN_8
-                    Barcode.FORMAT_UPC_A -> BarcodeInfo.TYPE_UPC_A
-                    Barcode.FORMAT_UPC_E -> BarcodeInfo.TYPE_UPC_E
-                    else -> 0
+                    Barcode.FORMAT_EAN_13 -> BarcodeInfo.Type.EAN_13
+                    Barcode.FORMAT_EAN_8 -> BarcodeInfo.Type.EAN_8
+                    Barcode.FORMAT_UPC_A -> BarcodeInfo.Type.UPC_A
+                    Barcode.FORMAT_UPC_E -> BarcodeInfo.Type.UPC_E
+                    else -> continue
                     }
 
-                if (type!=0) {
-                    val barcodeInfo=BarcodeInfo(type, barcode.rawValue ?: "")
+                val barcodeInfo=BarcodeInfo(type, barcode.rawValue ?: "")
 
-                    for (f in barcodeDetectedListeners) {
-                        f(barcodeInfo)
-                        }
+                for (f in barcodeDetectedListeners) {
+                    f(barcodeInfo)
                     }
                 }
             }

@@ -40,7 +40,7 @@ class ScanningResultsAdapter: RecyclerView.Adapter<ScanningResultsAdapter.Scanni
 
         private val scanningResultSelectedListeners=scanningResultSelectedListeners
 
-        private var scanningResult: BarcodeInfo=BarcodeInfo(0, "")
+        private var scanningResult: BarcodeInfo=BarcodeInfo(BarcodeInfo.Type.EAN_13, "")
 
         fun bind(scanningResult: BarcodeInfo)
             {

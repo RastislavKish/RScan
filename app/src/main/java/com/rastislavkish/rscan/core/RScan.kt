@@ -45,7 +45,7 @@ class RScan(activity: AppCompatActivity) {
             val text=clipboard.primaryClip?.getItemAt(0)?.text
 
             if (text!=null) {
-                return barcodeCache.importCsv(text.toString())
+                return barcodeCache.importCache(text.toString())
                 }
             }
 
@@ -55,7 +55,7 @@ class RScan(activity: AppCompatActivity) {
         {
         val clipboard=context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
-        val clip=ClipData.newPlainText("BarcodeCache", barcodeCache.exportCsv())
+        val clip=ClipData.newPlainText("BarcodeCache", barcodeCache.exportCache())
 
         clipboard.setPrimaryClip(clip)
         }

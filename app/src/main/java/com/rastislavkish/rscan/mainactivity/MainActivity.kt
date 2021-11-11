@@ -32,6 +32,9 @@ import android.widget.Button
 import android.widget.ToggleButton
 import androidx.recyclerview.widget.RecyclerView
 
+import kotlinx.serialization.*
+import kotlinx.serialization.json.Json
+
 import com.rastislavkish.rtk.Sound
 import com.rastislavkish.rtk.Speech
 
@@ -167,7 +170,7 @@ class MainActivity : AppCompatActivity() {
     private fun startBarcodeIdentificationActivity(barcode: BarcodeInfo)
         {
         val intent=Intent(this, BarcodeIdentificationActivity::class.java)
-        intent.putExtra("barcode", barcode.csv())
+        intent.putExtra("barcode", Json.encodeToString(barcode))
         barcodeIdentificationActivityLauncher.launch(intent)
         }
     }
