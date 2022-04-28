@@ -37,6 +37,8 @@ class RScan(activity: AppCompatActivity) {
         bScanner.addBarcodeDetectedListener(this::barcodeDetected)
         }
 
+    private val barcodeEvaluator=DuckDuckGoBarcodeEvaluator()
+
     fun importFromClipboard(): Boolean
         {
         val clipboard=context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -88,6 +90,12 @@ class RScan(activity: AppCompatActivity) {
         val cachedBarcode=barcodeCache.getBarcode(barcode)
         if (cachedBarcode!=null)
         raiseNewScanningResultEvent(cachedBarcode)
+
+        //If we don't, try to describe the barcode with an evaluator
+
+        val description=barcodeEvaluator.evaluateBarcode(barcode)
+        if (description!="")
+        raiseNewScanningResultEvent(BarcodeInfo(barcode.type, barcode.value, description))
 
         //Else, forward the event
 
