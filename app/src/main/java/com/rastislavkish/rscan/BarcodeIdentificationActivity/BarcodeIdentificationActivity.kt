@@ -90,7 +90,7 @@ class BarcodeIdentificationActivity: AppCompatActivity() {
 
         //Set what's necessary
 
-        barcodeInfoTextView.text=barcode.description
+        barcodeInfoTextView.text="${BarcodeInfo.typeToString(barcode.type)}: ${barcode.value}"
         wordCountTextView.text=wordCount.toString()
 
         barcodeDescriptionsAdapter=BarcodeDescriptionsAdapter(DuckDuckGoBarcodeLookupper().lookupBarcode(barcode))
