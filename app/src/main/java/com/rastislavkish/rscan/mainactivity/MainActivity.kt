@@ -90,7 +90,6 @@ class MainActivity : AppCompatActivity() {
         if (activityOrientationOk) {
             rScan=RScan(this)
             rScan.addNewScanningResultListener(this::newScanningResult)
-            rScan.setFlashlightState(settings.useFlashlight)
             }
 
         scanningResultsAdapter.addScanningResultSelectedListener(this::scanningResultSelected)
@@ -113,6 +112,14 @@ class MainActivity : AppCompatActivity() {
         rScan.deinitialize()
 
         super.onDestroy()
+        }
+
+    override fun onResume()
+        {
+        super.onResume()
+
+        if (this::rScan.isInitialized)
+        rScan.setFlashlightState(settings.useFlashlight)
         }
 
     private fun newScanningResult(scanningResult: BarcodeInfo)
