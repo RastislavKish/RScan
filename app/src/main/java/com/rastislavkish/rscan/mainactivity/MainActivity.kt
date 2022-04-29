@@ -73,9 +73,6 @@ class MainActivity : AppCompatActivity() {
 
         requestedOrientation=ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
-        if (!activityOrientationOk)
-        return
-
         settings=Settings(getSharedPreferences("RScanSettings", MODE_PRIVATE))
         settings.load()
 
@@ -90,9 +87,11 @@ class MainActivity : AppCompatActivity() {
 
         speech=Speech(this)
 
-        rScan=RScan(this)
-        rScan.addNewScanningResultListener(this::newScanningResult)
-        rScan.setFlashlightState(settings.useFlashlight)
+        if (activityOrientationOk) {
+            rScan=RScan(this)
+            rScan.addNewScanningResultListener(this::newScanningResult)
+            rScan.setFlashlightState(settings.useFlashlight)
+            }
 
         scanningResultsAdapter.addScanningResultSelectedListener(this::scanningResultSelected)
 
