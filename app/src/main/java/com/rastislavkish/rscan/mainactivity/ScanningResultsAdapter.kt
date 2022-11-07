@@ -46,7 +46,7 @@ class ScanningResultsAdapter: RecyclerView.Adapter<ScanningResultsAdapter.Scanni
             {
             this.scanningResult=scanningResult
 
-            itemTextView.text=scanningResult.description
+            itemTextView.text=scanningResult.label
             }
 
         fun itemTextView_click(view: View)

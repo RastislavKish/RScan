@@ -28,10 +28,11 @@ import kotlinx.serialization.json.Json
 class BarcodeInfo(
     val type: Type,
     val value: String,
-    val description: String="${typeToString(type)}: $value"
+    val description: String?=null,
     ) {
 
-    val known=description!="${typeToString(type)}: $value"
+    val label: String
+    get() = description ?: "${typeToString(type)}: $value"
 
     override fun equals(other: Any?): Boolean
         {

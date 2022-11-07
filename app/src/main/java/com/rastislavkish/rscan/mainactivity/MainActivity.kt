@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity() {
         return
 
         barcodeScannerBeep.play()
-        if (scanningResult.known)
+        if (scanningResult.description!=null)
         speech.speak(scanningResult.description)
         else
         speech.speak(BarcodeInfo.typeToString(scanningResult.type), false)
