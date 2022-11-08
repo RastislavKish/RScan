@@ -77,8 +77,18 @@ class ScanningResultsAdapter: RecyclerView.Adapter<ScanningResultsAdapter.Scanni
 
     fun addScanningResult(scanningResult: BarcodeInfo): Boolean
         {
-        if (scanningResult in scanningResultsList)
-        return false
+        val listIndex=scanningResultsList.indexOf(scanningResult)
+        if (listIndex>-1) {
+            if (scanningResultsList[listIndex].description==null)
+            return false
+
+            scanningResultsList.removeAt(listIndex)
+            scanningResultsList.add(0, scanningResult)
+
+            notifyItemMoved(listIndex, 0)
+
+            return true
+            }
 
         scanningResultsList.add(0, scanningResult)
 

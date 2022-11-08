@@ -64,6 +64,7 @@ class BScanner(activity: AppCompatActivity) {
     private val imageAnalysis: ImageAnalysis
 
     private var barcodeDetectedListeners=mutableListOf<(BarcodeInfo) -> Unit>()
+    private val barcodeDetectionTimes=mutableMapOf<BarcodeInfo, Long>()
 
     init {
 
@@ -128,6 +129,14 @@ class BScanner(activity: AppCompatActivity) {
                     }
 
                 val barcodeInfo=BarcodeInfo(type, barcode.rawValue ?: "")
+
+                val currentTime=System.currentTimeMillis()
+
+                val lastSpottedTime=barcodeDetectionTimes[barcodeInfo] ?: 0L
+                barcodeDetectionTimes[barcodeInfo]=currentTime
+
+                if (currentTime-lastSpottedTime<=3000)
+                continue
 
                 for (f in barcodeDetectedListeners) {
                     f(barcodeInfo)

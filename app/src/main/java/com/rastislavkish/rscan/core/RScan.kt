@@ -88,20 +88,25 @@ class RScan(activity: AppCompatActivity) {
         //Check if we know the barcode
 
         val cachedBarcode=barcodeCache.getBarcode(barcode)
-        if (cachedBarcode!=null)
-        raiseNewScanningResultEvent(cachedBarcode)
+        if (cachedBarcode!=null) {
+            raiseNewScanningResultEvent(cachedBarcode)
+            return
+            }
 
         //If we don't, try to describe the barcode with an evaluator if the type is EAN-13 or UPC-A
 
         if (barcode.type==BarcodeInfo.Type.EAN_13 || barcode.type==BarcodeInfo.Type.UPC_A) {
             val description=barcodeEvaluator.evaluateBarcode(barcode)
-            if (description!="")
-            raiseNewScanningResultEvent(BarcodeInfo(barcode.type, barcode.value, description))
+            if (description!="") {
+                raiseNewScanningResultEvent(BarcodeInfo(barcode.type, barcode.value, description))
+                return
+                }
             }
 
         //Else, forward the event
 
         raiseNewScanningResultEvent(barcode)
+        return
         }
     private fun raiseNewScanningResultEvent(barcode: BarcodeInfo)
         {
