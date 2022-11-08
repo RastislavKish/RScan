@@ -32,8 +32,13 @@ class DuckDuckGoBarcodeLookupper: BarcodeLookupper {
     override val name="DuckDuckGo"
     override val checked=false
 
+    private val cache=mutableMapOf<BarcodeInfo, List<String>>()
+
     override fun lookupBarcode(barcode: BarcodeInfo): List<String>
         {
+        if (barcode in cache)
+        return cache[barcode] ?: throw Exception("DuckDuckGo lookup cache returned a null result")
+
         val results=mutableListOf<String>()
 
         val t=thread {
@@ -48,6 +53,9 @@ class DuckDuckGoBarcodeLookupper: BarcodeLookupper {
             }
         t.join()
 
-        return results.toList()
+        val result=results.toList()
+        cache[barcode]=result
+
+        return result
         }
     }

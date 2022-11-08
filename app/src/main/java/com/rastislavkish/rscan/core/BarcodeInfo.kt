@@ -42,6 +42,9 @@ class BarcodeInfo(
 
         return false
         }
+    override fun hashCode(): Int {
+        return type.hashCode() xor value.hashCode()
+        }
 
     @Serializable
     enum class Type {
