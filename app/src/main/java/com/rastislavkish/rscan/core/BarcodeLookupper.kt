@@ -39,21 +39,30 @@ class DuckDuckGoBarcodeLookupper: BarcodeLookupper {
         if (barcode in cache)
         return cache[barcode] ?: throw Exception("DuckDuckGo lookup cache returned a null result")
 
-        val results=mutableListOf<String>()
+        var results: MutableList<String>?=null
 
         val t=thread {
-            val doc=Jsoup.connect("https://duckduckgo.com/html/?q=${barcode.value}").get()
-            val headers=doc.getElementsByTag("h2")
+            try {
+                val doc=Jsoup.connect("https://duckduckgo.com/html/?q=${barcode.value}").get()
+                val headers=doc.getElementsByTag("h2")
 
-            for (header in headers) {
-                if (header.text()!="") {
-                    results.add(header.text())
+                results=mutableListOf<String>()
+
+                for (header in headers) {
+                    if (header.text()!="") {
+                        results?.add(header.text())
+                        }
                     }
+                }
+            catch (e: Exception) {
+
                 }
             }
         t.join()
 
-        val result=results.toList()
+        val result=results?.toList() ?: listOf<String>()
+
+        if (results!=null)
         cache[barcode]=result
 
         return result
