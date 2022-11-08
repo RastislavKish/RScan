@@ -22,11 +22,43 @@ Over time, your local database should cover everything you normally use, making 
 
 Note that RScan is not a general purpose barcode scanner, it's aimed primarily for direct product identification. Therefore, supported barcode types are limited to those usable for this purpose and formats like QR codes along with their sharing functionalities aren't and most likely won't be supported.
 
+### Automatic barcode description
+
+Since manual description of barcodes can be a tedious task, especially with the variety of products available, starting from version 1.2, RScan tries to automate this process.
+
+For EAN-13 and UPC-A codes, which are global, it searches DuckDuckGo for possible descriptions, and using a special algorithm, it picks what it considers to be the most useful label.
+
+Therefore, no special action should be required from the user most of the time, depending on the internet coverage of products in your local area, RScan should be able to identify products right away after spotting their barcode.
+
+### Limitations
+
+Please note, while the algorithm uses few tricks for determining the most useful description and it has been confirmed to work quite reliably in the author's country, it's not able to actually understand the content of the picked choices, so you may end up with a completely unrelated phrase, like a title of an article or a sequence of letters and numbers at times. It's of course still possible to view the DuckDuckGo results, so you can select one yourself or assign a label of your choice.
+
+Also, not all barcodes are suitable for an internet search. EAN-8 barcodes, for example, are typically used just locally, by warehouses or the stores, and therefore, it's very rare to find their description. RScan won't even try to identify these, and you will see just the barcode type and value in the list of scans.
+
+Despite these limitations, automatic product identification has proven to be a very useful tool making RScan a lot more convenient to use, and, you can improve it even further.
+
+#### Units
+
+One of the aspects RScan evaluates in DDG search results is the presence of some kind of measure. If the result contains information about volume, weight, size or other parameter, it's likely to be more useful to the user.
+
+However, some units are more frequent than others, and to avoid false positives, RScan looks just for a relatively small set of the most useful ones.
+
+Right now, these include g, mg, kg, l, ml, dl and %.
+
+If you often run into an unit, that you think should also be covered in this list, please, open an issue describing the unit, some context - where is it used, how frequently etc.
+
+#### Results containing the barcode value
+
+It's not so frequent, but it sometimes happens, some of the results include the actual barcode value in their title, which is long and undesired in this place.
+
+In my testing, RScan has so far been successfully avoiding these in the process of automatic picking. However, there is no explicit penalisation for this in the algorithm, so the behavior can depend on the local Internet trends.
+
+If you keep running into results of this type and you see there are other choices available that don't contain the barcode value, please, feel free to get in touch, I'll see what can I do.
+
 ## Installation
 
-The easiest way to get RScan up and running is to install it wia [F-Droid,](https://fdroid.org/) the open source app repository for Android.
-
-Alternatively, you can also compile and run the program from source. Once you have JDK 11 and Android SDK in place, all you need to do to compile RScan is:\
+You can compile and run the program from source. Once you have JDK 11 and Android SDK in place, all you need to do to compile RScan is:\
 ```./gradlew assembleDebug```\
 or release, according to your needs.
 
