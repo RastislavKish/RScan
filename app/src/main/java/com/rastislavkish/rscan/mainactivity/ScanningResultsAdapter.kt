@@ -30,6 +30,9 @@ class ScanningResultsAdapter: RecyclerView.Adapter<ScanningResultsAdapter.Scanni
     private val scanningResultsList=mutableListOf<BarcodeInfo>()
     private val scanningResultSelectedListeners=mutableListOf<(BarcodeInfo) -> Unit>()
 
+    val lastScanningResult: BarcodeInfo?
+    get() = scanningResultsList.elementAtOrNull(0)
+
     class ScanningResultViewHolder(view: View, scanningResultSelectedListeners: MutableList<(BarcodeInfo) -> Unit>): RecyclerView.ViewHolder(view) {
 
         private val itemTextView: TextView=view.findViewById(R.id.itemTextView)

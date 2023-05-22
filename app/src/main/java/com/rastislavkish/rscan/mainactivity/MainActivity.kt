@@ -20,6 +20,7 @@ import android.content.res.Configuration
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.SharedPreferences
+import android.hardware.SensorManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.result.ActivityResult
@@ -35,6 +36,8 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
 
+import com.squareup.seismic.ShakeDetector
+
 import com.rastislavkish.rtk.Sound
 import com.rastislavkish.rtk.Speech
 
@@ -44,8 +47,9 @@ import com.rastislavkish.rscan.core.PermissionsRequester
 import com.rastislavkish.rscan.core.RScan
 import com.rastislavkish.rscan.core.Settings
 import com.rastislavkish.rscan.barcodeidentificationactivity.BarcodeIdentificationActivity
+import com.rastislavkish.rscan.opticalidentificationactivity.OpticalIdentificationActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ShakeDetector.Listener {
 
     private lateinit var speech: Speech
 
@@ -56,6 +60,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var rScan: RScan
     private val scanningResultsAdapter=ScanningResultsAdapter()
     private lateinit var barcodeIdentificationActivityLauncher: ActivityResultLauncher<Intent>
+    private lateinit var opticalIdentificationActivityLauncher: ActivityResultLauncher<Intent>
+    private lateinit var sensorManager: SensorManager
+    private lateinit var shakeDetector: ShakeDetector
 
     //Components
 
@@ -84,8 +91,11 @@ class MainActivity : AppCompatActivity() {
             }
 
         barcodeIdentificationActivityLauncher=registerForActivityResult(StartActivityForResult(), this::barcodeIdentificationActivityResult)
+        opticalIdentificationActivityLauncher=registerForActivityResult(StartActivityForResult(), this::opticalIdentificationActivityResult)
 
         speech=Speech(this)
+        sensorManager=getSystemService(SENSOR_SERVICE) as SensorManager
+        shakeDetector=ShakeDetector(this)
 
         if (activityOrientationOk) {
             rScan=RScan(this)
@@ -118,8 +128,28 @@ class MainActivity : AppCompatActivity() {
         {
         super.onResume()
 
-        if (this::rScan.isInitialized)
+        if (!this::rScan.isInitialized)
+        return
+
         rScan.setFlashlightState(settings.useFlashlight)
+        shakeDetector.start(sensorManager)
+        }
+    override fun onPause()
+        {
+        super.onPause()
+
+        if (!this::rScan.isInitialized)
+        return
+
+        shakeDetector.stop()
+        }
+
+    override fun hearShake() {
+        val lastScanningResult=scanningResultsAdapter.lastScanningResult
+
+        if (lastScanningResult!=null) {
+            startOpticalIdentificationActivity(lastScanningResult)
+            }
         }
 
     private fun newScanningResult(scanningResult: BarcodeInfo)
@@ -138,6 +168,16 @@ class MainActivity : AppCompatActivity() {
         startBarcodeIdentificationActivity(scanningResult)
         }
     private fun barcodeIdentificationActivityResult(result: ActivityResult)
+        {
+        if (result.resultCode==RESULT_OK) {
+            val barcode=BarcodeInfo.fromIntent(result.data, "result", "MainActivity")
+
+            if (scanningResultsAdapter.removeScanningResult(barcode)) {
+                rScan.cacheBarcode(barcode)
+                }
+            }
+        }
+    private fun opticalIdentificationActivityResult(result: ActivityResult)
         {
         if (result.resultCode==RESULT_OK) {
             val barcode=BarcodeInfo.fromIntent(result.data, "result", "MainActivity")
@@ -178,5 +218,11 @@ class MainActivity : AppCompatActivity() {
         val intent=Intent(this, BarcodeIdentificationActivity::class.java)
         intent.putExtra("barcode", Json.encodeToString(barcode))
         barcodeIdentificationActivityLauncher.launch(intent)
+        }
+    private fun startOpticalIdentificationActivity(barcode: BarcodeInfo)
+        {
+        val intent=Intent(this, OpticalIdentificationActivity::class.java)
+        intent.putExtra("barcode", Json.encodeToString(barcode))
+        opticalIdentificationActivityLauncher.launch(intent)
         }
     }

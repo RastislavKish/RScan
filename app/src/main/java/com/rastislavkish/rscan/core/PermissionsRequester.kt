@@ -27,13 +27,16 @@ class PermissionsRequester(context: Context) {
     val cameraPermission: Boolean
     get() = ContextCompat.checkSelfPermission(context, "android.permission.CAMERA")==PackageManager.PERMISSION_GRANTED
 
+    val recordAudioPermission: Boolean
+    get() = ContextCompat.checkSelfPermission(context, "android.permission.RECORD_AUDIO")==PackageManager.PERMISSION_GRANTED
+
     val permissionsGranted: Boolean
-    get() = cameraPermission
+    get() = cameraPermission && recordAudioPermission
 
     private val context=context
 
     fun requestPermissions(activity: Activity)
         {
-        ActivityCompat.requestPermissions(activity, arrayOf("android.permission.CAMERA"), 1)
+        ActivityCompat.requestPermissions(activity, arrayOf("android.permission.CAMERA", "android.permission.RECORD_AUDIO"), 1)
         }
     }
