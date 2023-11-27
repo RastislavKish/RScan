@@ -1,0 +1,4 @@
+- Added automatic product identification. For now, central Europe and metric unit system regions products supported
+- Implemented distinguishing identical products
+- Multiple bug fixes
+

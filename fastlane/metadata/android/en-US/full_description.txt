@@ -1,14 +1,21 @@
 <p>
-RScan allows blind and visually impaired people to quickly recognize any product simply by scanning its barcode!
+RScan allows blind and visually impaired people to quickly recognize any product simply by scanning its barcode.
 </p>
 <p>
-Using a handy local caching system, users can collect relevant descriptions of their day to day used products and save them to a database, so they can hear the most important information in matter of seconds.
+A smart algorithm looks up scanned barcodes on DuckDuckGo, and automatically reads aloud what it considers to be the most fitting and useful description of the scanned product. In most of the cases that should suffice, but in addition, users can also use a local caching system to efficiently label any barcode.
+</p>
+<p>
+RScan can also deal with repeated scanning of the same products, meaning it's suitable for sorting large groups of items where the same barcodes can appear multiple times.
+</p>
+<p>
+Note: The algorithm for automatic product recognition is designed and tested to work on central Europe products using the metric unit system. Other regions still need feedback, see the project's readme.
 </p>
 <h2>Features</h2>
 <ul>
-<li>Support for EAN-13, EAN-8, UPC-A and UPC-E barcode formats.</li>
-<li>A local barcode caching system, allowing the user to describe a product in any way they want.</li>
-<li>Integrated tools for product identification, including searches from DuckDuckGo and a word selector for minimalization of the keyboard usage.</li>
+<li>Support for EAN-13, EAN-8, UPC-A and UPC-E barcode formats</li>
+<li>Automatic barcode lookup and description</li>
+<li>Efficient scanning speeds and identical producsts separation, allowing convenient group sorting</li>
+<li>A local barcode caching system, allowing the user to describe a product in any way they want</li>
 </ul>
 <h2>Usage tips</h2>
 <p>

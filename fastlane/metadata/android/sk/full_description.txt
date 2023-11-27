@@ -1,14 +1,21 @@
 <p>
-RScan umožňuje nevidiacim a slabozrakým používateľom rozpoznať produkt jednoduchým naskenovaním jeho čiarového kódu!
+RScan umožňuje nevidiacim a slabozrakým používateľom rozpoznať produkt jednoduchým naskenovaním jeho čiarového kódu.
 </p>
 <p>
-Obsahuje lokálny cachovací systém, ktorý umožňuje používateľom priradiť produktom relevantné popisy a dozvedieť sa dôležité informácie behom niekoľkých sekúnd.
+Inteligentný algoritmus vyhľadáva scanované kódy na DuckDuckGo a na základe výsledkov k nim automaticky vyberá najvýstižnejšie a najužitočnejšie popisy. Vo väčšine prípadov by to malo postačovať, k dispozícii je ale taktiež lokálny cachovací systém, vrámci ktorého môže používateľ priradiť kódom ľubovoľný vlastný popis.
+</p>
+<p>
+RScan si dokáže taktiež poradiť s opakovaným scanovaním identických produktov, vďaka čomu je vhodný na triedenie väčších skupín položiek, kde sa rovnaký čiarový kód môže vyskytovať viac krát.
+</p>
+<p>
+Poznámka: Automatické popisovanie čiarových kódov je navrhnuté a testované na produktoch zo strednej Európy, využívajúcich metrický jednotkový systém. Produkty z iných regiónov si vyžadujú spätnú väzbu, viz. readme projektu.
 </p>
 <h2>Funkcie</h2>
 <ul>
-<li>Podpora čiarových kódov formátov EAN-13, EAN-8, UPC-A a UPC-E.</li>
-<li>Lokálny cachovací systém, umožňujúci používateľom popísať jednotlivé produkty podľa vlastných potrieb.</li>
-<li>Zabudované nástroje pre produktovú identifikáciu, vrátane vyhľadávania na DuckDuckGo či vyberača slov pre minimalizáciu potreby použitia klávesnice.</li>
+<li>Podpora čiarových kódov formátov EAN-13, EAN-8, UPC-A a UPC-E</li>
+<li>Automatické popisovanie čiarových kódov</li>
+<li>Efektívne skenovacie rýchlosti a rozlišovanie identických produktov, umožňujúce triedenie väčších skupín objektov</li>
+<li>Lokálny cachovací systém, umožňujúci používateľom popísať jednotlivé produkty podľa vlastných potrieb</li>
 </ul>
 <h2>Tipy pre používanie</h2>
 <p>
