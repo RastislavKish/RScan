@@ -40,13 +40,13 @@ class ScanningResultsAdapter: RecyclerView.Adapter<ScanningResultsAdapter.Scanni
 
         private val scanningResultSelectedListeners=scanningResultSelectedListeners
 
-        private var scanningResult: BarcodeInfo=BarcodeInfo(0, "")
+        private var scanningResult: BarcodeInfo=BarcodeInfo(BarcodeInfo.Type.EAN_13, "")
 
         fun bind(scanningResult: BarcodeInfo)
             {
             this.scanningResult=scanningResult
 
-            itemTextView.text=scanningResult.description
+            itemTextView.text=scanningResult.label
             }
 
         fun itemTextView_click(view: View)
@@ -77,8 +77,18 @@ class ScanningResultsAdapter: RecyclerView.Adapter<ScanningResultsAdapter.Scanni
 
     fun addScanningResult(scanningResult: BarcodeInfo): Boolean
         {
-        if (scanningResult in scanningResultsList)
-        return false
+        val listIndex=scanningResultsList.indexOf(scanningResult)
+        if (listIndex>-1) {
+            if (scanningResultsList[listIndex].description==null)
+            return false
+
+            scanningResultsList.removeAt(listIndex)
+            scanningResultsList.add(0, scanningResult)
+
+            notifyItemMoved(listIndex, 0)
+
+            return true
+            }
 
         scanningResultsList.add(0, scanningResult)
 

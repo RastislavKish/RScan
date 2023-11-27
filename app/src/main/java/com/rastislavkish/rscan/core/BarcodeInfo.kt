@@ -21,17 +21,18 @@ import android.util.Base64
 
 import java.nio.charset.StandardCharsets
 
-class BarcodeInfo(type: Int, value: String, description: String="") {
+import kotlinx.serialization.*
+import kotlinx.serialization.json.Json
 
-    val type=type
-    val value=value
-    val description=when (description) {
-        "" -> "${typeToString(type)}: $value"
-        else -> description
-        }
-    val known=description!=""
+@Serializable
+class BarcodeInfo(
+    val type: Type,
+    val value: String,
+    val description: String?=null,
+    ) {
 
-    fun csv(): String="${typeToString(type)},$value,${String(Base64.encode(description.toByteArray(StandardCharsets.UTF_8), Base64.DEFAULT), StandardCharsets.UTF_8)}"
+    val label: String
+    get() = description ?: "${typeToString(type)}: $value"
 
     override fun equals(other: Any?): Boolean
         {
@@ -41,26 +42,34 @@ class BarcodeInfo(type: Int, value: String, description: String="") {
 
         return false
         }
+    override fun hashCode(): Int {
+        return type.hashCode() xor value.hashCode()
+        }
+
+    @Serializable
+    enum class Type {
+        EAN_13,
+        EAN_8,
+        UPC_A,
+        UPC_E,
+        }
 
     companion object {
 
-        const val TYPE_EAN_13=1
-        const val TYPE_EAN_8=2
-        const val TYPE_UPC_A=4
-        const val TYPE_UPC_E=8
-
         fun fromCsv(csv: String): BarcodeInfo?
             {
+            //This method is kept only for backward compatibility reasons.
+
             val fields=csv.split(",")
 
             if (fields.size!=3)
             return null
 
             val type=when (fields[0].lowercase().replace("-", "").replace("_", "").replace(" ", "").trim()) {
-                "ean13" -> TYPE_EAN_13
-                "ean8" -> TYPE_EAN_8
-                "upca" -> TYPE_UPC_A
-                "upce" -> TYPE_UPC_E
+                "ean13" -> Type.EAN_13
+                "ean8" -> Type.EAN_8
+                "upca" -> Type.UPC_A
+                "upce" -> Type.UPC_E
                 else -> return null
                 }
             val value=fields[1]
@@ -77,26 +86,29 @@ class BarcodeInfo(type: Int, value: String, description: String="") {
             if (intent!=null) {
                 val extras=intent.extras
                 if (extras!=null) {
-                    val barcodeCsv=(extras.getCharSequence(key)
+                    val barcodeJson=(extras.getCharSequence(key)
                     ?: throw Exception("$caller did not receive a barcode in received intent on key \"$key\"."))
                     .toString()
 
-                    return BarcodeInfo.fromCsv(barcodeCsv)
-                    ?: throw Exception("Barcode received by $caller is invalid.")
+                    try {
+                        return Json.decodeFromString<BarcodeInfo>(barcodeJson)
+                        }
+                    catch (e: Exception) {
+                        throw Exception("Barcode received by $caller is invalid.")
+                        }
                     }
                 else throw Exception("$caller did not receive any extras in the received intent.")
                 }
             else throw Exception("$caller did not receive any intent.")
             }
 
-        fun typeToString(type: Int): String
+        fun typeToString(type: Type): String
             {
             return when (type) {
-                TYPE_EAN_13 -> "EAN-13"
-                TYPE_EAN_8 -> "EAN-8"
-                TYPE_UPC_A -> "UPC-A"
-                TYPE_UPC_E -> "UPC-E"
-                else -> "Unknown"
+                Type.EAN_13 -> "EAN-13"
+                Type.EAN_8 -> "EAN-8"
+                Type.UPC_A -> "UPC-A"
+                Type.UPC_E -> "UPC-E"
                 };
             }
         }

@@ -16,12 +16,11 @@
 
 package com.rastislavkish.rscan.mainactivity
 
+import android.content.res.Configuration
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -32,6 +31,9 @@ import android.view.View
 import android.widget.Button
 import android.widget.ToggleButton
 import androidx.recyclerview.widget.RecyclerView
+
+import kotlinx.serialization.*
+import kotlinx.serialization.json.Json
 
 import com.rastislavkish.rtk.Sound
 import com.rastislavkish.rtk.Speech
@@ -61,6 +63,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var flashlightToggleButton: ToggleButton
 
+    private val activityOrientationOk: Boolean
+    get() = resources.configuration.orientation==Configuration.ORIENTATION_LANDSCAPE
+
     override fun onCreate(savedInstanceState: Bundle?)
         {
         super.onCreate(savedInstanceState)
@@ -82,11 +87,10 @@ class MainActivity : AppCompatActivity() {
 
         speech=Speech(this)
 
-        rScan=RScan(this)
-        rScan.addNewScanningResultListener(this::newScanningResult)
-        Handler(Looper.getMainLooper()).postDelayed({
-            rScan.setFlashlightState(settings.useFlashlight)
-            }, 1000)
+        if (activityOrientationOk) {
+            rScan=RScan(this)
+            rScan.addNewScanningResultListener(this::newScanningResult)
+            }
 
         scanningResultsAdapter.addScanningResultSelectedListener(this::scanningResultSelected)
 
@@ -100,9 +104,22 @@ class MainActivity : AppCompatActivity() {
         }
     override fun onDestroy()
         {
+        if (!activityOrientationOk) {
+            super.onDestroy()
+            return
+            }
+
         rScan.deinitialize()
 
         super.onDestroy()
+        }
+
+    override fun onResume()
+        {
+        super.onResume()
+
+        if (this::rScan.isInitialized)
+        rScan.setFlashlightState(settings.useFlashlight)
         }
 
     private fun newScanningResult(scanningResult: BarcodeInfo)
@@ -111,7 +128,7 @@ class MainActivity : AppCompatActivity() {
         return
 
         barcodeScannerBeep.play()
-        if (scanningResult.known)
+        if (scanningResult.description!=null)
         speech.speak(scanningResult.description)
         else
         speech.speak(BarcodeInfo.typeToString(scanningResult.type), false)
@@ -159,7 +176,7 @@ class MainActivity : AppCompatActivity() {
     private fun startBarcodeIdentificationActivity(barcode: BarcodeInfo)
         {
         val intent=Intent(this, BarcodeIdentificationActivity::class.java)
-        intent.putExtra("barcode", barcode.csv())
+        intent.putExtra("barcode", Json.encodeToString(barcode))
         barcodeIdentificationActivityLauncher.launch(intent)
         }
     }

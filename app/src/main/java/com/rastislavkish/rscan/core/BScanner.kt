@@ -42,13 +42,17 @@ class BScanner(activity: AppCompatActivity) {
     var flashlight: Boolean=false
     set(value)
         {
-        if (camera!=null) {
-            if (camera?.cameraInfo?.hasFlashUnit()==true) {
-                camera?.cameraControl?.enableTorch(value)
-                field=value
+        synchronized (flashlightLock) {
+            if (camera!=null) {
+                if (camera?.cameraInfo?.hasFlashUnit()==true) {
+                    camera?.cameraControl?.enableTorch(value)
+                    }
                 }
+            field=value
             }
         }
+
+    private var flashlightLock=Any()
 
     private val activity=activity
 
@@ -60,6 +64,7 @@ class BScanner(activity: AppCompatActivity) {
     private val imageAnalysis: ImageAnalysis
 
     private var barcodeDetectedListeners=mutableListOf<(BarcodeInfo) -> Unit>()
+    private val barcodeDetectionTimes=mutableMapOf<BarcodeInfo, Long>()
 
     init {
 
@@ -78,10 +83,15 @@ class BScanner(activity: AppCompatActivity) {
 
         val cameraProviderFuture=ProcessCameraProvider.getInstance(activity)
         cameraProviderFuture.addListener(Runnable {
-            cameraProvider=cameraProviderFuture.get()
+            synchronized (flashlightLock) {
+                cameraProvider=cameraProviderFuture.get()
 
-            camera=cameraProvider?.bindToLifecycle(activity, CameraSelector.DEFAULT_BACK_CAMERA, imageAnalysis)
-            flashlight=false
+                camera=cameraProvider?.bindToLifecycle(activity, CameraSelector.DEFAULT_BACK_CAMERA, imageAnalysis)
+
+                if (camera?.cameraInfo?.hasFlashUnit()==true) {
+                    camera?.cameraControl?.enableTorch(flashlight)
+                    }
+                }
             }, ContextCompat.getMainExecutor(activity))
         }
 
@@ -111,19 +121,25 @@ class BScanner(activity: AppCompatActivity) {
         for (barcode in barcodes) {
             if (barcode.rawValue!=null) {
                 val type=when (barcode.format) {
-                    Barcode.FORMAT_EAN_13 -> BarcodeInfo.TYPE_EAN_13
-                    Barcode.FORMAT_EAN_8 -> BarcodeInfo.TYPE_EAN_8
-                    Barcode.FORMAT_UPC_A -> BarcodeInfo.TYPE_UPC_A
-                    Barcode.FORMAT_UPC_E -> BarcodeInfo.TYPE_UPC_E
-                    else -> 0
+                    Barcode.FORMAT_EAN_13 -> BarcodeInfo.Type.EAN_13
+                    Barcode.FORMAT_EAN_8 -> BarcodeInfo.Type.EAN_8
+                    Barcode.FORMAT_UPC_A -> BarcodeInfo.Type.UPC_A
+                    Barcode.FORMAT_UPC_E -> BarcodeInfo.Type.UPC_E
+                    else -> continue
                     }
 
-                if (type!=0) {
-                    val barcodeInfo=BarcodeInfo(type, barcode.rawValue ?: "")
+                val barcodeInfo=BarcodeInfo(type, barcode.rawValue ?: "")
 
-                    for (f in barcodeDetectedListeners) {
-                        f(barcodeInfo)
-                        }
+                val currentTime=System.currentTimeMillis()
+
+                val lastSpottedTime=barcodeDetectionTimes[barcodeInfo] ?: 0L
+                barcodeDetectionTimes[barcodeInfo]=currentTime
+
+                if (currentTime-lastSpottedTime<=3000)
+                continue
+
+                for (f in barcodeDetectedListeners) {
+                    f(barcodeInfo)
                     }
                 }
             }

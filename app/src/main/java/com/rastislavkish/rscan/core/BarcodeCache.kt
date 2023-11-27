@@ -18,6 +18,9 @@ package com.rastislavkish.rscan.core
 
 import android.content.SharedPreferences
 
+import kotlinx.serialization.*
+import kotlinx.serialization.json.Json
+
 class BarcodeCache(preferences: SharedPreferences) {
 
     private var cache=mutableListOf<BarcodeInfo>()
@@ -25,56 +28,86 @@ class BarcodeCache(preferences: SharedPreferences) {
 
     fun load()
         {
-        val csvCache=preferences.getString("Cache", null)
+        val serializedCache=preferences.getString("Cache", null)
 
-        if (csvCache!=null) {
-            val localCache=mutableListOf<BarcodeInfo>()
+        if (serializedCache!=null) {
+            if (!isJson(serializedCache)) {
+                //The cache is stored in CSV format, used by the first versions of RScan
 
-            for (line in csvCache.split("\n")) {
-                val barcode=BarcodeInfo.fromCsv(line)
+                val localCache=mutableListOf<BarcodeInfo>()
 
-                if (barcode!=null) {
-                    localCache.add(barcode)
+                for (line in serializedCache.split("\n")) {
+                    val barcode=BarcodeInfo.fromCsv(line)
+
+                    if (barcode!=null) {
+                        localCache.add(barcode)
+                        }
                     }
+
+                cache=localCache
+                save()
+
+                return
                 }
 
-            cache=localCache
+            cache=Json.decodeFromString<MutableList<BarcodeInfo>>(serializedCache)
             }
         }
     fun save()
         {
-        val csvCache=cache.map({ it.csv() }).joinToString("\n")
+        val serializedCache=Json.encodeToString(cache)
 
         preferences.edit()
-        .putString("Cache", csvCache)
+        .putString("Cache", serializedCache)
         .apply()
         }
 
-    fun importCsv(csv: String?): Boolean
-        {
-        if (csv!=null) {
-            val localCache=mutableListOf<BarcodeInfo>()
+    fun importCache(serializedCache: String?): Boolean {
+        if (serializedCache!=null) {
+            if (!isJson(serializedCache)) {
+                //The cache is most likely stored in CSV format, used by the first versions of RScan
 
-            for (line in csv.split("\n")) {
-                val barcode=BarcodeInfo.fromCsv(line)
+                val localCache=mutableListOf<BarcodeInfo>()
 
-                if (barcode!=null) {
-                    localCache.add(barcode)
+                for (line in serializedCache.split("\n")) {
+                    val barcode=BarcodeInfo.fromCsv(line)
+
+                    if (barcode!=null) {
+                        localCache.add(barcode)
+                        }
                     }
+
+                if (localCache.size>1) {
+                    cache=localCache
+                    save()
+                    return true
+                    }
+
+                return false
                 }
 
-            if (localCache.size>=1) {
+            val localCache: MutableList<BarcodeInfo>
+
+            try {
+                localCache=Json.decodeFromString<MutableList<BarcodeInfo>>(serializedCache)
+                }
+            catch (e: Exception) {
+                return false
+                }
+
+            if (localCache.size>1) {
                 cache=localCache
                 save()
                 return true
                 }
+
+            return false
             }
 
         return false
         }
-    fun exportCsv(): String
-        {
-        return cache.map({ it.csv() }).joinToString("\n")
+    fun exportCache(): String {
+        return Json.encodeToString(cache)
         }
 
     fun addBarcode(barcode: BarcodeInfo)
@@ -92,5 +125,11 @@ class BarcodeCache(preferences: SharedPreferences) {
             }
 
         return null
+        }
+
+    private fun isJson(data: String): Boolean {
+        //a very simple method to distinguish Json from CSV. It's purpose is not real json verification
+
+        return ((data.startsWith("{") && data.endsWith("}")) || (data.startsWith("[") && data.endsWith("]")))
         }
     }

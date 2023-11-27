@@ -1,0 +1,4 @@
+- Pridané automatické popisovanie produktov
+- Implementované rozlišovanie identických produktov
+- Oprava viacerých bugov
+
