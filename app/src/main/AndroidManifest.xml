@@ -16,13 +16,13 @@
         android:theme="@style/Theme.RScan"
         tools:targetApi="31">
 
-        <activity android:name=".mainactivity.MainActivity"
+        <activity android:name=".ui.mainactivity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
                 </intent-filter>
             </activity>
-        <activity android:name=".barcodeidentificationactivity.BarcodeIdentificationActivity" />
+        <activity android:name=".ui.barcodeidentificationactivity.BarcodeIdentificationActivity" />
         </application>
     </manifest>

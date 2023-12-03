@@ -14,7 +14,7 @@
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-package com.rastislavkish.rscan.mainactivity
+package com.rastislavkish.rscan.ui.mainactivity
 
 import android.content.res.Configuration
 import android.content.Intent
@@ -44,7 +44,7 @@ import com.rastislavkish.rscan.core.BarcodeInfo
 import com.rastislavkish.rscan.core.PermissionsRequester
 import com.rastislavkish.rscan.core.RScan
 import com.rastislavkish.rscan.core.Settings
-import com.rastislavkish.rscan.barcodeidentificationactivity.BarcodeIdentificationActivity
+import com.rastislavkish.rscan.ui.barcodeidentificationactivity.BarcodeIdentificationActivity
 
 class MainActivity : AppCompatActivity() {
 
