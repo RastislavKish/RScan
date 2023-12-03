@@ -124,14 +124,12 @@ Here are few types of product you'll likely encounter and the places where barco
 
 Note that these guidelines are not laws, in theory, a seller can place barcodes wherever they want. These advices will in most cases help you get to the result faster, but if you can't progress with them, it might be worth checking all of the object's surface so you don't miss anything.
 
-## Assets
+## Attributions
 
-The program currently contains these assets, distributed under the following licenses:
-
-Asset | Description | License
+Asset | Author | Source
 --- | --- | ---
-[BarcodeScannerBeep.opus](https://freesound.org/people/zerolagtime/sounds/144418/) | The barcode scanner's beep sound | [Creative Commons 0](https://creativecommons.org/publicdomain/zero/1.0/)
-[icon.png](https://iconmonstr.com/barcode-1-png/) | The program's main icon | [Iconmonstr's license](https://iconmonstr.com/license/)
+Icon | <a href="https://www.flaticon.com/free-icons/barcode" title="barcode icons">Barcode icons created by Rusmicon - Flaticon</a> | [Flaticon](https://www.flaticon.com/free-icon/barcode_12767582)
+Scanner beep | [Zerolagtime](https://freesound.org/people/zerolagtime) | [Freesound](https://freesound.org/people/zerolagtime/sounds/144418)
 
 None of these assets is my work, all rights belong to their respective authors.
 
