@@ -106,6 +106,10 @@ class BScanner(activity: AppCompatActivity) {
         barcodeDetectedListeners.add(f)
         }
 
+    fun updateDeviceRotation(rotation: Int) {
+        imageAnalysis.setTargetRotation(rotation)
+        }
+
     fun deinitialize()
         {
         cameraExecutor.shutdown()

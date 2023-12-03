@@ -27,6 +27,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 
 import android.view.View
+import android.view.OrientationEventListener
 
 import android.widget.Button
 import android.widget.ToggleButton
@@ -48,6 +49,7 @@ import com.rastislavkish.rscan.barcodeidentificationactivity.BarcodeIdentificati
 class MainActivity : AppCompatActivity() {
 
     private lateinit var speech: Speech
+    private lateinit var orientationEventListener: OrientationEventListener
 
     private val barcodeScannerBeep=Sound()
     private lateinit var permissionsRequester: PermissionsRequester
@@ -63,15 +65,10 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var flashlightToggleButton: ToggleButton
 
-    private val activityOrientationOk: Boolean
-    get() = resources.configuration.orientation==Configuration.ORIENTATION_LANDSCAPE
-
     override fun onCreate(savedInstanceState: Bundle?)
         {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        requestedOrientation=ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
         settings=Settings(getSharedPreferences("RScanSettings", MODE_PRIVATE))
         settings.load()
@@ -86,11 +83,16 @@ class MainActivity : AppCompatActivity() {
         barcodeIdentificationActivityLauncher=registerForActivityResult(StartActivityForResult(), this::barcodeIdentificationActivityResult)
 
         speech=Speech(this)
+        orientationEventListener=object : OrientationEventListener(this) {
 
-        if (activityOrientationOk) {
-            rScan=RScan(this)
-            rScan.addNewScanningResultListener(this::newScanningResult)
+            override fun onOrientationChanged(orientation: Int) {
+                onOrientationChange(orientation)
+                }
             }
+
+        rScan=RScan(this)
+        rScan.setFlashlightState(settings.useFlashlight)
+        rScan.addNewScanningResultListener(this::newScanningResult)
 
         scanningResultsAdapter.addScanningResultSelectedListener(this::scanningResultSelected)
 
@@ -104,22 +106,20 @@ class MainActivity : AppCompatActivity() {
         }
     override fun onDestroy()
         {
-        if (!activityOrientationOk) {
-            super.onDestroy()
-            return
-            }
-
         rScan.deinitialize()
 
         super.onDestroy()
         }
 
+    override fun onPause()
+        {
+        orientationEventListener.disable()
+        super.onPause()
+        }
     override fun onResume()
         {
+        orientationEventListener.enable()
         super.onResume()
-
-        if (this::rScan.isInitialized)
-        rScan.setFlashlightState(settings.useFlashlight)
         }
 
     private fun newScanningResult(scanningResult: BarcodeInfo)
@@ -171,6 +171,22 @@ class MainActivity : AppCompatActivity() {
         {
         rScan.exportToClipboard()
         speech.speak("Copied")
+        }
+
+    var lastRotationValue=-1
+    fun onOrientationChange(orientation: Int)
+        {
+        if (orientation==OrientationEventListener.ORIENTATION_UNKNOWN) {
+            return
+            }
+
+        val rotation=androidx.camera.core.UseCase.snapToSurfaceRotation(orientation)
+
+        if (rotation!=lastRotationValue) {
+            rScan.updateDeviceRotation(rotation)
+
+            lastRotationValue=rotation
+            }
         }
 
     private fun startBarcodeIdentificationActivity(barcode: BarcodeInfo)
