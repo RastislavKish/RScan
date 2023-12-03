@@ -1,0 +1,1 @@
+- Main screen now uses the system orientation

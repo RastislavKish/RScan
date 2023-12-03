@@ -14,7 +14,7 @@
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-package com.rastislavkish.rscan.barcodeidentificationactivity
+package com.rastislavkish.rscan.ui.barcodeidentificationactivity
 
 import android.content.Intent
 import android.content.pm.ActivityInfo

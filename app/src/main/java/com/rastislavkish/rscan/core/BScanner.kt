@@ -25,6 +25,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.resolutionselector.ResolutionSelector
+import androidx.camera.core.resolutionselector.ResolutionStrategy
 import androidx.camera.core.ImageProxy
 import androidx.camera.lifecycle.ProcessCameraProvider
 
@@ -74,8 +76,12 @@ class BScanner(activity: AppCompatActivity) {
 
         scanner=BarcodeScanning.getClient(options)
 
+        val resolutionSelector=ResolutionSelector.Builder()
+        .setResolutionStrategy(ResolutionStrategy(Size(1920, 1080), ResolutionStrategy.FALLBACK_RULE_CLOSEST_HIGHER_THEN_LOWER))
+        .build()
+
         imageAnalysis=ImageAnalysis.Builder()
-        .setTargetResolution(Size(1920, 1080))
+        .setResolutionSelector(resolutionSelector)
         .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
         .build()
 
@@ -98,6 +104,10 @@ class BScanner(activity: AppCompatActivity) {
     fun addBarcodeDetectedListener(f: (BarcodeInfo) -> Unit)
         {
         barcodeDetectedListeners.add(f)
+        }
+
+    fun updateDeviceRotation(rotation: Int) {
+        imageAnalysis.setTargetRotation(rotation)
         }
 
     fun deinitialize()

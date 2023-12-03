@@ -21,3 +21,10 @@ Note: The algorithm for automatic product recognition is designed and tested to 
 <p>
 For detailed description and advices on how to efficiently find and scan a barcode, see the project's <a href="https://github.com/RastislavKish/RScan">official repository.</a>
 </p>
+<h2>Attributions</h2>
+<p>
+Icon <a href="https://www.flaticon.com/free-icons/barcode" title="barcode icons">Barcode icons created by Rusmicon - Flaticon</a> of <a href="https://www.flaticon.com/free-icon/barcode_12767582">Flaticon</a>
+</p>
+<p>
+Scanner beep created by <a href="https://freesound.org/people/zerolagtime">Zerolagtime</a> of <a href="https://freesound.org/people/zerolagtime/sounds/144418">Freesound</a>
+</p>

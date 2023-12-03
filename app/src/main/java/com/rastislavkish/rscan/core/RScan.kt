@@ -78,6 +78,11 @@ class RScan(activity: AppCompatActivity) {
         bScanner.flashlight=state
         }
 
+    fun updateDeviceRotation(rotation: Int)
+        {
+        bScanner.updateDeviceRotation(rotation)
+        }
+
     fun deinitialize()
         {
         bScanner.deinitialize()
