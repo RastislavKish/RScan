@@ -133,6 +133,12 @@ Scanner beep | [Zerolagtime](https://freesound.org/people/zerolagtime) | [Freeso
 
 None of these assets is my work, all rights belong to their respective authors.
 
+## Privacy policy
+
+RScan looks up scanned barcodes on DuckDuckGo, therefore sharing the obtained barcode numbers with the service in the form of regular search. These lookup requests don't include any fingerprinting nor personal information allowing user identification or tracking, except the public IP address of the device.
+
+RScan itself does not collect any user information.
+
 ## License
 
 Copyright (C) 2021 Rastislav Kish
